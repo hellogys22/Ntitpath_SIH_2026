@@ -1,0 +1,334 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {"colors": {"on-secondary": "#ffffff", "error": "#ba1a1a", "outline": "#74777e", "primary-fixed": "#d1e4ff", "surface-container-lowest": "#ffffff", "on-primary": "#ffffff", "on-tertiary-fixed-variant": "#6e3900", "tertiary-fixed": "#ffdcc3", "primary-fixed-dim": "#b0c9e8", "on-secondary-fixed-variant": "#3d4759", "tertiary-fixed-dim": "#ffb77d", "surface": "#f8f9fb", "surface-bright": "#f8f9fb", "error-container": "#ffdad6", "on-tertiary-container": "#d77503", "on-background": "#191c1e", "tertiary-container": "#401f00", "inverse-on-surface": "#eff1f3", "surface-container-low": "#f2f4f6", "surface-container-highest": "#e0e3e5", "secondary-container": "#d6e0f6", "surface-variant": "#e0e3e5", "tertiary": "#220e00", "secondary-fixed-dim": "#bdc7dc", "surface-dim": "#d8dadc", "on-surface": "#191c1e", "on-primary-container": "#7991af", "inverse-surface": "#2d3133", "on-error-container": "#93000a", "outline-variant": "#c3c6ce", "background": "#f8f9fb", "on-surface-variant": "#43474d", "on-error": "#ffffff", "on-primary-fixed": "#011d35", "on-primary-fixed-variant": "#314863", "on-secondary-fixed": "#121c2c", "surface-tint": "#49607c", "inverse-primary": "#b0c9e8", "on-tertiary": "#ffffff", "primary": "#001428", "primary-container": "#0f2942", "secondary-fixed": "#d9e3f9", "surface-container": "#eceef0", "on-secondary-container": "#596376", "surface-container-high": "#e6e8ea", "on-tertiary-fixed": "#2f1500", "secondary": "#555f71"}, "borderRadius": {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"}, "spacing": {"space-1": "4px", "space-8": "32px", "space-3": "12px", "gutter-mobile": "12px", "space-12": "48px", "gutter-desktop": "24px", "grid-columns": "12", "margin-mobile": "16px", "gutter-tablet": "16px", "space-4": "16px", "space-6": "24px", "margin-desktop": "48px", "margin-tablet": "24px", "space-2": "8px"}, "fontFamily": {"body-sm": ["Public Sans"], "headline-xl": ["Public Sans"], "body-lg": ["Public Sans"], "headline-lg": ["Public Sans"], "headline-lg-mobile": ["Public Sans"], "label-sm": ["Public Sans"], "body-md": ["Public Sans"], "headline-md": ["Public Sans"], "label-md": ["Public Sans"], "headline-sm": ["Public Sans"]}, "fontSize": {"body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}], "headline-xl": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}], "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}], "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.005em", "fontWeight": "600"}], "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "600"}], "label-sm": ["11px", {"lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "500"}], "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}], "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}], "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}], "headline-sm": ["16px", {"lineHeight": "24px", "fontWeight": "600"}]}}}};</script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@100..900&amp;display=swap" rel="stylesheet"></head><body class="bg-background font-body-md text-on-background"><header class="fixed top-0 w-full z-50 bg-primary-container text-on-primary shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="max-w-7xl mx-auto px-gutter-desktop h-20 flex flex-col justify-center"><div class="flex items-center justify-between"><div class="flex items-center gap-4"><div class="flex flex-col"><div class="flex items-center gap-3"><span class="text-headline-lg font-headline-lg tracking-tight text-on-primary">NitiPath</span><span class="px-2 py-0.5 bg-surface-container-high/20 text-on-primary text-label-sm rounded uppercase">SIH 2026 | SIH26130</span></div><span class="text-body-sm text-primary-fixed">Industrial Approval &amp; Compliance Intelligence</span></div></div><div class="flex items-center gap-4"><div class="flex items-center gap-3"><a class="text-body-sm text-primary-fixed hover:text-on-primary transition-colors flex items-center gap-1" href="#"><span class="material-symbols-outlined text-[16px]">help</span>Help</a><a class="text-body-sm text-primary-fixed hover:text-on-primary transition-colors flex items-center gap-1" href="#"><span class="material-symbols-outlined text-[16px]">language</span>Language</a><a class="px-3 py-1.5 rounded text-body-sm text-on-primary bg-surface/10 hover:bg-surface/20 transition-colors" data-path="login" href="#">Login</a><a class="px-3 py-1.5 rounded text-body-sm text-primary bg-primary-fixed hover:bg-primary-fixed-dim transition-colors" data-path="register" href="#">Register</a><div class="w-8 h-8 rounded-full bg-surface-container-low flex items-center justify-center"><span class="material-symbols-outlined text-primary text-[18px]">person</span></div></div></div></div><nav class="hidden lg:flex items-center gap-space-6 mt-2 pt-2 border-t border-primary-fixed/20" data-active-classes="bg-surface/15 text-on-primary font-semibold rounded"><a aria-current="page" class="transition-colors py-1 bg-surface/15 text-on-primary font-semibold rounded" data-path="home" href="#">Home</a><a class="text-body-sm text-primary-fixed hover:text-on-primary transition-colors py-1" data-path="how-it-works" href="#">How It Works</a><a class="text-body-sm text-primary-fixed hover:text-on-primary transition-colors py-1" data-path="approval-journey" href="#">Approval Journey</a><a class="text-body-sm text-primary-fixed hover:text-on-primary transition-colors py-1" data-path="documents" href="#">Documents</a><a class="text-body-sm text-primary-fixed hover:text-on-primary transition-colors py-1" data-path="risk-and-dependencies" href="#">Risk &amp; Dependencies</a><a class="text-body-sm text-primary-fixed hover:text-on-primary transition-colors py-1" data-path="support-and-schemes" href="#">Support &amp; Schemes</a><a class="text-body-sm text-primary-fixed hover:text-on-primary transition-colors py-1" data-path="compliance" href="#">Compliance</a><a class="text-body-sm text-primary-fixed hover:text-on-primary transition-colors py-1" data-path="copilot" href="#">Copilot</a></nav></div><div class="bg-surface-container-low border-t border-surface-variant/40 px-gutter-desktop py-space-2 text-center"><p class="text-body-sm text-on-surface-variant">Intelligent guidance for industrial regulatory journeys</p></div></header><main class="w-full pt-28 bg-background min-h-[calc(100vh-200px)]"><div class="flex flex-col w-full">
+<!-- Hero Section -->
+<section class="relative bg-primary-container text-on-primary py-20 px-gutter-desktop overflow-hidden bg-gradient-to-br">
+<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-surface-tint/20 via-transparent to-transparent pointer-events-none"></div>
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+<div class="lg:col-span-7 flex flex-col gap-6">
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-surface/10 rounded-full w-fit">
+<span class="material-symbols-outlined text-[16px] text-primary-fixed">verified</span>
+<span class="text-label-sm uppercase tracking-wider text-primary-fixed">SIH 2026 Enterprise Intelligence Platform</span>
+</div>
+<h1 class="text-headline-xl text-on-primary font-headline-xl tracking-tight">Navigate Your Industrial Approval Journey with Clarity</h1>
+<p class="text-body-lg text-primary-fixed max-w-2xl">Understand what applies to your business, identify potential problems early, plan approvals efficiently, and stay on top of compliance.</p>
+<div class="flex flex-wrap items-center gap-4 pt-2">
+<a class="px-6 py-3 bg-primary-fixed text-on-primary-fixed font-semibold rounded hover:bg-primary-fixed-dim transition-colors flex items-center gap-2 shadow-sm" data-path="assessment" href="#">
+            Start Business Assessment
+            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+<a class="px-6 py-3 bg-surface/10 text-on-primary font-semibold rounded hover:bg-surface/20 transition-colors border border-surface/20" data-path="how-it-works" href="#">
+            See How NitiPath Works
+          </a>
+</div>
+<div class="grid grid-cols-3 gap-6 pt-6 border-t border-primary-fixed/20 mt-4">
+<div>
+<div class="text-headline-md text-on-primary font-bold">100%</div>
+<div class="text-body-sm text-primary-fixed">Regulatory Coverage</div>
+</div>
+<div>
+<div class="text-headline-md text-on-primary font-bold">40%</div>
+<div class="text-body-sm text-primary-fixed">Time to Approval Saved</div>
+</div>
+<div>
+<div class="text-headline-md text-on-primary font-bold">0</div>
+<div class="text-body-sm text-primary-fixed">Missed Compliance Deadlines</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-5">
+<div class="bg-surface text-on-surface p-6 rounded shadow-xl border border-surface-variant flex flex-col gap-4 shadow-2xl">
+<div class="flex items-center justify-between pb-3 border-b border-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">assessment</span>
+<span class="font-headline-sm">Active Project Status</span>
+</div>
+<span class="px-2 py-0.5 rounded text-label-sm bg-surface-container-high text-on-surface-variant">In Progress</span>
+</div>
+<div class="flex flex-col gap-3">
+<div class="flex justify-between items-center text-body-sm">
+<span class="text-on-surface-variant">Environmental Clearance</span>
+<span class="font-medium text-error">Action Required</span>
+</div>
+<div class="flex justify-between items-center text-body-sm">
+<span class="text-on-surface-variant">Factory License (CIE)</span>
+<span class="font-medium text-primary">In Review</span>
+</div>
+<div class="flex justify-between items-center text-body-sm">
+<span class="text-on-surface-variant">Fire Safety NOC</span>
+<span class="font-medium text-success">Approved</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 rounded mt-2 flex flex-col gap-2">
+<div class="text-label-md uppercase text-outline">System Diagnostic</div>
+<p class="text-body-sm text-on-surface-variant">2 dependency bottlenecks detected in parallel path scheduling. Review recommended.</p>
+</div>
+<a class="text-center py-2 bg-primary text-on-primary text-body-sm font-semibold rounded hover:bg-primary-container transition-colors" href="#">Open Compliance Engine</a>
+</div>
+</div>
+</div>
+</section>
+<!-- Clean Visual Process Illustration -->
+<section class="py-12 bg-surface border-b border-surface-variant">
+<div class="max-w-7xl mx-auto px-gutter-desktop">
+<div class="text-center max-w-2xl mx-auto mb-10">
+<span class="text-label-md text-primary font-bold uppercase tracking-wider">End-to-End Orchestration</span>
+<h2 class="text-headline-lg text-on-surface mt-1">The NitiPath Workflow Architecture</h2>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-6 gap-4 relative">
+<div class="bg-white p-4 rounded border border-surface-variant flex flex-col items-center text-center shadow-sm">
+<div class="w-10 h-10 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold mb-3">01</div>
+<h3 class="text-headline-sm text-on-surface mb-1">Business Setup</h3>
+<p class="text-body-sm text-on-surface-variant">Profile mapping &amp; sector categorization</p>
+</div>
+<div class="bg-white p-4 rounded border border-surface-variant flex flex-col items-center text-center shadow-sm">
+<div class="w-10 h-10 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold mb-3">02</div>
+<h3 class="text-headline-sm text-on-surface mb-1">Approval Plan</h3>
+<p class="text-body-sm text-on-surface-variant">Comprehensive statutory roadmap</p>
+</div>
+<div class="bg-white p-4 rounded border border-surface-variant flex flex-col items-center text-center shadow-sm">
+<div class="w-10 h-10 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold mb-3">03</div>
+<h3 class="text-headline-sm text-on-surface mb-1">Document Check</h3>
+<p class="text-body-sm text-on-surface-variant">AI-assisted validation &amp; integrity</p>
+</div>
+<div class="bg-white p-4 rounded border border-surface-variant flex flex-col items-center text-center shadow-sm">
+<div class="w-10 h-10 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold mb-3">04</div>
+<h3 class="text-headline-sm text-on-surface mb-1">Risk &amp; Dependencies</h3>
+<p class="text-body-sm text-on-surface-variant">Bottleneck detection &amp; mitigation</p>
+</div>
+<div class="bg-white p-4 rounded border border-surface-variant flex flex-col items-center text-center shadow-sm">
+<div class="w-10 h-10 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold mb-3">05</div>
+<h3 class="text-headline-sm text-on-surface mb-1">Best Path</h3>
+<p class="text-body-sm text-on-surface-variant">Optimized parallel sequencing</p>
+</div>
+<div class="bg-white p-4 rounded border border-surface-variant flex flex-col items-center text-center shadow-sm">
+<div class="w-10 h-10 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold mb-3">06</div>
+<h3 class="text-headline-sm text-on-surface mb-1">Support &amp; Compliance</h3>
+<p class="text-body-sm text-on-surface-variant">Ongoing tracking &amp; incentive schemes</p>
+</div>
+</div>
+</div>
+</section>
+<!-- 4 Distinct Professional Sections: PREDICT, PREVENT, OPTIMIZE, TRACK -->
+<section class="py-20 bg-background">
+<div class="max-w-7xl mx-auto px-gutter-desktop">
+<div class="text-center max-w-3xl mx-auto mb-16">
+<span class="text-label-md text-primary font-bold uppercase tracking-wider">Core Intelligence Pillars</span>
+<h2 class="text-headline-xl text-on-surface mt-2">Engineered for Absolute Regulatory Certainty</h2>
+<p class="text-body-lg text-on-surface-variant mt-3">Built to eliminate friction across every phase of industrial establishment and operation.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- PREDICT -->
+<div class="bg-white p-8 rounded border border-surface-variant shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="px-3 py-1 bg-primary-container text-on-primary text-label-md font-bold uppercase rounded">Predict</span>
+<span class="material-symbols-outlined text-primary text-[28px]">radar</span>
+</div>
+<h3 class="text-headline-lg text-on-surface mb-2">What may go wrong?</h3>
+<p class="text-body-md text-on-surface-variant mb-6">Identify potential approval risks and bottlenecks before they stall your project timeline.</p>
+<ul class="flex flex-col gap-3 mb-6">
+<li class="flex items-start gap-2 text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="">Automated historical rejection analysis by state and sector</span>
+</li>
+<li class="flex items-start gap-2 text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="">Jurisdictional overlap warning indicators</span>
+</li>
+</ul>
+</div>
+<a class="text-primary font-semibold text-body-sm flex items-center gap-1 hover:underline" href="#">Explore Risk Intelligence <span class="material-symbols-outlined text-[16px]">arrow_forward</span></a>
+</div>
+<!-- PREVENT -->
+<div class="bg-white p-8 rounded border border-surface-variant shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="px-3 py-1 bg-primary-container text-on-primary text-label-md font-bold uppercase rounded">Prevent</span>
+<span class="material-symbols-outlined text-primary text-[28px]">verified_user</span>
+</div>
+<h3 class="text-headline-lg text-on-surface mb-2">Fix issues early.</h3>
+<p class="text-body-md text-on-surface-variant mb-6">Find missing, inconsistent or problematic documents before official submission.</p>
+<ul class="flex flex-col gap-3 mb-6">
+<li class="flex items-start gap-2 text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="">Deep document pre-screening against statutory checklists</span>
+</li>
+<li class="flex items-start gap-2 text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="">Data consistency verification across technical blueprints</span>
+</li>
+</ul>
+</div>
+<a class="text-primary font-semibold text-body-sm flex items-center gap-1 hover:underline" href="#">View Document Engine <span class="material-symbols-outlined text-[16px]">arrow_forward</span></a>
+</div>
+<!-- OPTIMIZE -->
+<div class="bg-white p-8 rounded border border-surface-variant shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="px-3 py-1 bg-primary-container text-on-primary text-label-md font-bold uppercase rounded">Optimize</span>
+<span class="material-symbols-outlined text-primary text-[28px]">alt_route</span>
+</div>
+<h3 class="text-headline-lg text-on-surface mb-2">Find the best path.</h3>
+<p class="text-body-md text-on-surface-variant mb-6">Identify dependencies and activities that can potentially happen in parallel.</p>
+<ul class="flex flex-col gap-3 mb-6">
+<li class="flex items-start gap-2 text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="">Critical path method (CPM) scheduling for approvals</span>
+</li>
+<li class="flex items-start gap-2 text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="">Concurrent filing recommendations to reduce lead times</span>
+</li>
+</ul>
+</div>
+<a class="text-primary font-semibold text-body-sm flex items-center gap-1 hover:underline" href="#">Check Approval Journey <span class="material-symbols-outlined text-[16px]">arrow_forward</span></a>
+</div>
+<!-- TRACK -->
+<div class="bg-white p-8 rounded border border-surface-variant shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="px-3 py-1 bg-primary-container text-on-primary text-label-md font-bold uppercase rounded">Track</span>
+<span class="material-symbols-outlined text-primary text-[28px]">insights</span>
+</div>
+<h3 class="text-headline-lg text-on-surface mb-2">Stay on top.</h3>
+<p class="text-body-md text-on-surface-variant mb-6">Monitor progress, upcoming actions, renewals and compliance in real time.</p>
+<ul class="flex flex-col gap-3 mb-6">
+<li class="flex items-start gap-2 text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="">Automated compliance calendar and statutory alerts</span>
+</li>
+<li class="flex items-start gap-2 text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">check_circle</span>
+<span class="">Real-time tracking of department application status</span>
+</li>
+</ul>
+</div>
+<a class="text-primary font-semibold text-body-sm flex items-center gap-1 hover:underline" href="#">Access Compliance Dashboard <span class="material-symbols-outlined text-[16px]">arrow_forward</span></a>
+</div>
+</div>
+</div>
+</section>
+<!-- Problem Section -->
+<section class="py-20 bg-surface border-t border-surface-variant">
+<div class="max-w-7xl mx-auto px-gutter-desktop">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+<div class="lg:col-span-5 flex flex-col gap-6">
+<span class="text-label-md text-primary font-bold uppercase tracking-wider">The Complexity Challenge</span>
+<h2 class="text-headline-xl text-on-surface">Industrial approvals are a journey, not just a checklist</h2>
+<p class="text-body-lg text-on-surface-variant">Navigating state and central regulatory frameworks presents continuous strategic dilemmas for modern enterprises.</p>
+<div class="bg-white p-6 rounded border border-surface-variant shadow-sm">
+<div class="text-headline-sm text-on-surface mb-2">Did you know?</div>
+<p class="text-body-sm text-on-surface-variant">Over 65% of industrial project delays stem from sequenced dependency errors and unverified document prerequisites during initial filings.</p>
+</div>
+</div>
+<div class="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-white p-6 rounded border border-surface-variant shadow-sm flex flex-col gap-2">
+<span class="material-symbols-outlined text-primary text-[24px]">help</span>
+<h4 class="text-headline-sm text-on-surface">What do I need?</h4>
+<p class="text-body-sm text-on-surface-variant">Uncovering mandatory vs optional licenses for specific manufacturing sectors.</p>
+</div>
+<div class="bg-white p-6 rounded border border-surface-variant shadow-sm flex flex-col gap-2">
+<span class="material-symbols-outlined text-primary text-[24px]">description</span>
+<h4 class="text-headline-sm text-on-surface">What documents?</h4>
+<p class="text-body-sm text-on-surface-variant">Managing multi-departmental formatting, NOCs, and technical blueprints.</p>
+</div>
+<div class="bg-white p-6 rounded border border-surface-variant shadow-sm flex flex-col gap-2">
+<span class="material-symbols-outlined text-primary text-[24px]">format_list_numbered</span>
+<h4 class="text-headline-sm text-on-surface">What first? What in parallel?</h4>
+<p class="text-body-sm text-on-surface-variant">Sequencing interdependent clearances to minimize total time-to-market.</p>
+</div>
+<div class="bg-white p-6 rounded border border-surface-variant shadow-sm flex flex-col gap-2">
+<span class="material-symbols-outlined text-primary text-[24px]">warning</span>
+<h4 class="text-headline-sm text-on-surface">Where is the bottleneck?</h4>
+<p class="text-body-sm text-on-surface-variant">Predicting inspection delays, environmental reviews, and agency backlogs.</p>
+</div>
+<div class="bg-white p-6 rounded border border-surface-variant shadow-sm flex flex-col gap-2">
+<span class="material-symbols-outlined text-primary text-[24px]">support_agent</span>
+<h4 class="text-headline-sm text-on-surface">What support &amp; compliance?</h4>
+<p class="text-body-sm text-on-surface-variant">Leveraging government schemes while maintaining strict recurring compliance.</p>
+</div>
+<div class="bg-white p-6 rounded border border-surface-variant shadow-sm flex flex-col gap-2">
+<span class="material-symbols-outlined text-primary text-[24px]">update</span>
+<h4 class="text-headline-sm text-on-surface">What compliance due next?</h4>
+<p class="text-body-sm text-on-surface-variant">Staying ahead of renewal windows, filings, and statutory audits.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- How NitiPath Works 6-step professional journey -->
+<section class="py-20 bg-background">
+<div class="max-w-7xl mx-auto px-gutter-desktop">
+<div class="text-center max-w-2xl mx-auto mb-16">
+<span class="text-label-md text-primary font-bold uppercase tracking-wider">Methodology</span>
+<h2 class="text-headline-xl text-on-surface mt-2">How NitiPath Works</h2>
+<p class="text-body-lg text-on-surface-variant mt-3">A structured 6-step professional journey designed for institutional transparency and speed.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Step 01 -->
+<div class="bg-white p-8 rounded border border-surface-variant shadow-sm flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<span class="text-headline-lg font-bold text-primary">01</span>
+<span class="material-symbols-outlined text-primary">business</span>
+</div>
+<h3 class="text-headline-md text-on-surface">Business Profile</h3>
+<p class="text-body-sm text-on-surface-variant">Input industrial parameters including sector, scale, location, and environmental impact category to initialize the regulatory engine.</p>
+</div>
+<!-- Step 02 -->
+<div class="bg-white p-8 rounded border border-surface-variant shadow-sm flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<span class="text-headline-lg font-bold text-primary">02</span>
+<span class="material-symbols-outlined text-primary">map</span>
+</div>
+<h3 class="text-headline-md text-on-surface">Approval Plan</h3>
+<p class="text-body-sm text-on-surface-variant">Receive a tailored, comprehensive roadmap covering Central, State, and Municipal statutory requirements.</p>
+</div>
+<!-- Step 03 -->
+<div class="bg-white p-8 rounded border border-surface-variant shadow-sm flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<span class="text-headline-lg font-bold text-primary">03</span>
+<span class="material-symbols-outlined text-primary">fact_check</span>
+</div>
+<h3 class="text-headline-md text-on-surface">Document Check</h3>
+<p class="text-body-sm text-on-surface-variant">Pre-validate all technical drawings, land deeds, and compliance affidavits against active departmental checklists.</p>
+</div>
+<!-- Step 04 -->
+<div class="bg-white p-8 rounded border border-surface-variant shadow-sm flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<span class="text-headline-lg font-bold text-primary">04</span>
+<span class="material-symbols-outlined text-primary">hub</span>
+</div>
+<h3 class="text-headline-md text-on-surface">Risk &amp; Dependencies</h3>
+<p class="text-body-sm text-on-surface-variant">Identify prerequisite dependencies, agency bottlenecks, and high-risk regulatory choke points.</p>
+</div>
+<!-- Step 05 -->
+<div class="bg-white p-8 rounded border border-surface-variant shadow-sm flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<span class="text-headline-lg font-bold text-primary">05</span>
+<span class="material-symbols-outlined text-primary">timeline</span>
+</div>
+<h3 class="text-headline-md text-on-surface">Optimized Path</h3>
+<p class="text-body-sm text-on-surface-variant">Execute filings through an optimized critical path that accelerates parallel approvals and eliminates idle waiting times.</p>
+</div>
+<!-- Step 06 -->
+<div class="bg-white p-8 rounded border border-surface-variant shadow-sm flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<span class="text-headline-lg font-bold text-primary">06</span>
+<span class="material-symbols-outlined text-primary">verified</span>
+</div>
+<h3 class="text-headline-md text-on-surface">Support &amp; Compliance</h3>
+<p class="text-body-sm text-on-surface-variant">Unlock eligible state incentive schemes and maintain uninterrupted operational compliance via automated tracking.</p>
+</div>
+</div>
+<div class="mt-16 text-center">
+<a class="inline-flex items-center gap-2 px-8 py-4 bg-primary text-on-primary font-semibold rounded hover:bg-primary-container transition-colors shadow-sm" data-path="assessment" href="#">
+          Begin Your Industrial Assessment
+          <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</section>
+</div></main><footer class="w-full bg-surface-container-low text-on-surface-variant py-space-12 border-t border-surface-variant"><div class="max-w-7xl mx-auto px-gutter-desktop grid grid-cols-1 md:grid-cols-4 gap-space-8 mb-space-8"><div class="flex flex-col gap-space-3"><h4 class="text-headline-sm font-headline-sm text-on-surface">NitiPath Platform</h4><p class="text-body-sm">Institutional Intelligence for Industrial Approvals and Regulatory Compliance under SIH 2026 framework.</p></div><div class="flex flex-col gap-space-3"><h4 class="text-headline-sm font-headline-sm text-on-surface">Platform Links</h4><a class="text-body-sm hover:text-primary transition-colors" href="#">Approval Journey</a><a class="text-body-sm hover:text-primary transition-colors" href="#">Compliance Engine</a><a class="text-body-sm hover:text-primary transition-colors" href="#">Regulatory Copilot</a></div><div class="flex flex-col gap-space-3"><h4 class="text-headline-sm font-headline-sm text-on-surface">Resources</h4><a class="text-body-sm hover:text-primary transition-colors" href="#">Documentation</a><a class="text-body-sm hover:text-primary transition-colors" href="#">Risk &amp; Dependencies</a><a class="text-body-sm hover:text-primary transition-colors" href="#">Schemes Support</a></div><div class="flex flex-col gap-space-3"><h4 class="text-headline-sm font-headline-sm text-on-surface">Legal &amp; Notice</h4><a class="text-body-sm hover:text-primary transition-colors" href="#">Privacy Policy</a><a class="text-body-sm hover:text-primary transition-colors" href="#">Terms of Service</a><a class="text-body-sm hover:text-primary transition-colors" href="#">Disclaimer</a></div></div><div class="max-w-7xl mx-auto px-gutter-desktop pt-space-6 border-t border-surface-variant text-center"><p class="text-label-sm text-outline">Official Notice: This platform provides automated regulatory guidance and compliance intelligence. Final statutory approvals remain subject to authorized government agency evaluations.</p></div></footer>
+
+</body></html>

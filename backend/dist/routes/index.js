@@ -1,0 +1,24 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const auth_routes_1 = __importDefault(require("./auth.routes"));
+const business_routes_1 = __importDefault(require("./business.routes"));
+const application_routes_1 = __importDefault(require("./application.routes"));
+const document_routes_1 = __importDefault(require("./document.routes"));
+const compliance_routes_1 = __importDefault(require("./compliance.routes"));
+const admin_routes_1 = __importDefault(require("./admin.routes"));
+const copilot_routes_1 = __importDefault(require("./copilot.routes"));
+const router = (0, express_1.Router)();
+router.use('/auth', auth_routes_1.default);
+router.use('/business', business_routes_1.default);
+router.use('/businesses', business_routes_1.default);
+router.use('/applications', application_routes_1.default);
+router.use('/documents', document_routes_1.default);
+router.use('/compliance', compliance_routes_1.default);
+router.use('/support', compliance_routes_1.default);
+router.use('/admin', admin_routes_1.default);
+router.use('/copilot', copilot_routes_1.default);
+exports.default = router;

@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const document_controller_1 = require("../controllers/document.controller");
+const auth_middleware_1 = require("../middleware/auth.middleware");
+const upload_middleware_1 = require("../middleware/upload.middleware");
+const router = (0, express_1.Router)();
+router.use(auth_middleware_1.authenticateJwt);
+router.post('/upload', upload_middleware_1.upload.single('file'), document_controller_1.DocumentController.uploadDocument);
+router.get('/application/:applicationId', document_controller_1.DocumentController.getDocuments);
+router.get('/:id/analyze', document_controller_1.DocumentController.analyzeDocument);
+router.get('/application/:applicationId/consistency-audit', document_controller_1.DocumentController.runConsistencyAudit);
+router.post('/:id/resolve-mismatch', document_controller_1.DocumentController.resolveMismatch);
+exports.default = router;

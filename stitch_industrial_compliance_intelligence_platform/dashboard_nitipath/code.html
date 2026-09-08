@@ -1,0 +1,362 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {"colors": {"on-secondary": "#ffffff", "error": "#ba1a1a", "outline": "#74777e", "primary-fixed": "#d1e4ff", "surface-container-lowest": "#ffffff", "on-primary": "#ffffff", "on-tertiary-fixed-variant": "#6e3900", "tertiary-fixed": "#ffdcc3", "primary-fixed-dim": "#b0c9e8", "on-secondary-fixed-variant": "#3d4759", "tertiary-fixed-dim": "#ffb77d", "surface": "#f8f9fb", "surface-bright": "#f8f9fb", "error-container": "#ffdad6", "on-tertiary-container": "#d77503", "on-background": "#191c1e", "tertiary-container": "#401f00", "inverse-on-surface": "#eff1f3", "surface-container-low": "#f2f4f6", "surface-container-highest": "#e0e3e5", "secondary-container": "#d6e0f6", "surface-variant": "#e0e3e5", "tertiary": "#220e00", "secondary-fixed-dim": "#bdc7dc", "surface-dim": "#d8dadc", "on-surface": "#191c1e", "on-primary-container": "#7991af", "inverse-surface": "#2d3133", "on-error-container": "#93000a", "outline-variant": "#c3c6ce", "background": "#f8f9fb", "on-surface-variant": "#43474d", "on-error": "#ffffff", "on-primary-fixed": "#011d35", "on-primary-fixed-variant": "#314863", "on-secondary-fixed": "#121c2c", "surface-tint": "#49607c", "inverse-primary": "#b0c9e8", "on-tertiary": "#ffffff", "primary": "#001428", "primary-container": "#0f2942", "secondary-fixed": "#d9e3f9", "surface-container": "#eceef0", "on-secondary-container": "#596376", "surface-container-high": "#e6e8ea", "on-tertiary-fixed": "#2f1500", "secondary": "#555f71"}, "borderRadius": {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"}, "spacing": {"space-1": "4px", "space-8": "32px", "space-3": "12px", "gutter-mobile": "12px", "space-12": "48px", "gutter-desktop": "24px", "grid-columns": "12", "margin-mobile": "16px", "gutter-tablet": "16px", "space-4": "16px", "space-6": "24px", "margin-desktop": "48px", "margin-tablet": "24px", "space-2": "8px"}, "fontFamily": {"body-sm": ["Public Sans"], "headline-xl": ["Public Sans"], "body-lg": ["Public Sans"], "headline-lg": ["Public Sans"], "headline-lg-mobile": ["Public Sans"], "label-sm": ["Public Sans"], "body-md": ["Public Sans"], "headline-md": ["Public Sans"], "label-md": ["Public Sans"], "headline-sm": ["Public Sans"]}, "fontSize": {"body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}], "headline-xl": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}], "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}], "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.005em", "fontWeight": "600"}], "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "600"}], "label-sm": ["11px", {"lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "500"}], "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}], "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}], "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}], "headline-sm": ["16px", {"lineHeight": "24px", "fontWeight": "600"}]}}}};</script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@100..900&amp;display=swap" rel="stylesheet"></head><body class="bg-background font-body-md text-on-background"><header class="fixed top-0 w-full z-50 bg-primary-container text-on-primary shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="max-w-7xl mx-auto px-gutter-desktop h-20 flex flex-col justify-center"><div class="flex items-center justify-between"><div class="flex items-center gap-4"><div class="flex flex-col"><div class="flex items-center gap-3"><span class="text-headline-lg font-headline-lg tracking-tight text-on-primary">NitiPath</span><span class="px-2 py-0.5 bg-surface-container-high/20 text-on-primary text-label-sm rounded uppercase">SIH 2026 | SIH26130</span></div><span class="text-body-sm text-primary-fixed">Industrial Approval &amp; Compliance Intelligence</span></div></div><div class="flex items-center gap-4"><div class="flex items-center gap-3"><a class="text-body-sm text-primary-fixed hover:text-on-primary transition-colors flex items-center gap-1" href="#"><span class="material-symbols-outlined text-[16px]">help</span>Help</a><a class="text-body-sm text-primary-fixed hover:text-on-primary transition-colors flex items-center gap-1" href="#"><span class="material-symbols-outlined text-[16px]">language</span>Language</a><a class="px-3 py-1.5 rounded text-body-sm text-on-primary bg-surface/10 hover:bg-surface/20 transition-colors" data-path="login" href="#">Login</a><a class="px-3 py-1.5 rounded text-body-sm text-primary bg-primary-fixed hover:bg-primary-fixed-dim transition-colors" data-path="register" href="#">Register</a><div class="w-8 h-8 rounded-full bg-surface-container-low flex items-center justify-center"><span class="material-symbols-outlined text-primary text-[18px]">person</span></div></div></div></div><nav class="hidden lg:flex items-center gap-space-6 mt-2 pt-2 border-t border-primary-fixed/20" data-active-classes="bg-surface/15 text-on-primary font-semibold rounded"><a class="text-body-sm text-primary-fixed hover:text-on-primary transition-colors py-1" data-path="home" href="#">Home</a><a class="text-body-sm text-primary-fixed hover:text-on-primary transition-colors py-1" data-path="how-it-works" href="#">How It Works</a><a aria-current="page" class="transition-colors py-1 bg-surface/15 text-on-primary font-semibold rounded" data-path="approval-journey" href="#">Approval Journey</a><a class="text-body-sm text-primary-fixed hover:text-on-primary transition-colors py-1" data-path="documents" href="#">Documents</a><a class="text-body-sm text-primary-fixed hover:text-on-primary transition-colors py-1" data-path="risk-and-dependencies" href="#">Risk &amp; Dependencies</a><a class="text-body-sm text-primary-fixed hover:text-on-primary transition-colors py-1" data-path="support-and-schemes" href="#">Support &amp; Schemes</a><a class="text-body-sm text-primary-fixed hover:text-on-primary transition-colors py-1" data-path="compliance" href="#">Compliance</a><a class="text-body-sm text-primary-fixed hover:text-on-primary transition-colors py-1" data-path="copilot" href="#">Copilot</a></nav></div><div class="bg-surface-container-low border-t border-surface-variant/40 px-gutter-desktop py-space-2 text-center"><p class="text-body-sm text-on-surface-variant">Intelligent guidance for industrial regulatory journeys</p></div></header><main class="w-full pt-28 bg-background min-h-[calc(100vh-200px)]"><div class="flex flex-col w-full">
+<!-- Top Institutional Bar & Company Header -->
+<div class="bg-surface-container-lowest px-gutter-desktop py-space-6 border-b border-surface-variant shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-space-4">
+<div class="flex items-center gap-space-4">
+<div class="w-16 h-16 rounded bg-primary-container text-on-primary flex items-center justify-center font-headline-lg text-headline-md shadow-sm">
+          RF
+        </div>
+<div>
+<div class="flex items-center gap-space-2">
+<h1 class="text-headline-lg font-headline-lg text-on-surface">Raipur Fresh Foods Pvt. Ltd.</h1>
+<span class="px-2 py-0.5 bg-secondary-container text-on-secondary-container text-label-sm rounded uppercase font-semibold">Active Enterprise</span>
+</div>
+<p class="text-body-sm text-on-surface-variant flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px] text-outline">location_on</span>
+            Raipur, Chhattisgarh, India • SIH ID: SIH26130 • Sector: Food Processing &amp; Cold Storage
+          </p>
+</div>
+</div>
+<div class="flex items-center gap-space-3">
+<div class="text-right hidden sm:block">
+<span class="text-label-sm text-outline uppercase block">Last Synchronized</span>
+<span class="text-body-sm font-semibold text-on-surface">Today, 14:32 IST</span>
+</div>
+<button class="px-4 py-2 bg-primary text-on-primary text-body-md font-semibold rounded hover:bg-primary-container transition-colors flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">sync</span>
+          Sync State
+        </button>
+</div>
+</div>
+</div>
+<!-- Main Content Layout -->
+<div class="max-w-7xl mx-auto w-full px-gutter-desktop py-space-8 flex flex-col gap-space-8">
+<!-- KPI Overview Cards (Compact Institutional Blocks) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-space-4">
+<!-- Business Readiness -->
+<div class="bg-surface-container-lowest p-space-4 rounded border border-surface-variant shadow-sm flex flex-col justify-between">
+<div>
+<span class="text-label-sm text-outline uppercase font-semibold">Business Readiness</span>
+<div class="flex items-baseline gap-2 mt-2">
+<span class="text-headline-lg font-headline-lg text-on-surface">72%</span>
+<span class="text-body-sm text-on-tertiary-container font-semibold">+4.5% this week</span>
+</div>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full mt-4 overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 72%"></div>
+</div>
+</div>
+<!-- Approvals -->
+<div class="bg-surface-container-lowest p-space-4 rounded border border-surface-variant shadow-sm flex flex-col justify-between">
+<div>
+<span class="text-label-sm text-outline uppercase font-semibold">Approvals Status</span>
+<div class="flex items-baseline gap-2 mt-2">
+<span class="text-headline-lg font-headline-lg text-on-surface">18</span>
+<span class="text-body-sm text-outline">Total Tracked</span>
+</div>
+</div>
+<div class="flex items-center justify-between text-body-sm mt-4 pt-2 border-t border-surface-variant/40">
+<span class="text-on-surface font-semibold">8 Done</span>
+<span class="text-on-tertiary-container font-semibold">5 Active</span>
+<span class="text-error font-semibold">3 Pending</span>
+</div>
+</div>
+<!-- Documents -->
+<div class="bg-surface-container-lowest p-space-4 rounded border border-surface-variant shadow-sm flex flex-col justify-between">
+<div>
+<span class="text-label-sm text-outline uppercase font-semibold">Document Vault</span>
+<div class="flex items-baseline gap-2 mt-2">
+<span class="text-headline-lg font-headline-lg text-on-surface">27</span>
+<span class="text-body-sm text-outline">Submitted</span>
+</div>
+</div>
+<div class="flex items-center justify-between text-body-sm mt-4 pt-2 border-t border-surface-variant/40">
+<span class="text-on-surface font-semibold">24 OK</span>
+<span class="text-error font-semibold">2 Fix</span>
+<span class="text-error font-semibold">1 Miss</span>
+</div>
+</div>
+<!-- High Risk -->
+<div class="bg-surface-container-lowest p-space-4 rounded border border-surface-variant shadow-sm flex flex-col justify-between border-l-4 border-l-error">
+<div>
+<span class="text-label-sm text-error uppercase font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">warning</span> High Risk Items
+          </span>
+<div class="flex items-baseline gap-2 mt-2">
+<span class="text-headline-lg font-headline-lg text-error">2</span>
+<span class="text-body-sm text-outline">Requires Action</span>
+</div>
+</div>
+<div class="text-body-sm text-on-surface-variant mt-4 pt-2 border-t border-surface-variant/40">
+          Pollution &amp; Electricity NOC
+        </div>
+</div>
+<!-- Upcoming Compliance -->
+<div class="bg-surface-container-lowest p-space-4 rounded border border-surface-variant shadow-sm flex flex-col justify-between">
+<div>
+<span class="text-label-sm text-outline uppercase font-semibold">Upcoming Compliance</span>
+<div class="flex items-baseline gap-2 mt-2">
+<span class="text-headline-lg font-headline-lg text-on-surface">2</span>
+<span class="text-body-sm text-outline">Due in 30 days</span>
+</div>
+</div>
+<div class="text-body-sm text-on-surface-variant mt-4 pt-2 border-t border-surface-variant/40">
+          Next: Boiler Inspection (12 Days)
+        </div>
+</div>
+</div>
+<!-- MOST IMPORTANT COMPONENT: Current Bottleneck -->
+<div class="bg-surface-container-lowest rounded border border-error/40 shadow-sm p-space-6 relative overflow-hidden">
+<div class="absolute top-0 right-0 bg-error-container text-on-error-container px-4 py-1 text-label-sm uppercase font-bold rounded-bl">
+        Critical Bottleneck
+      </div>
+<div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-space-4 mb-space-4">
+<div class="flex items-center gap-space-3">
+<div class="w-12 h-12 rounded bg-error-container text-on-error-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[24px]">gpp_bad</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h2 class="text-headline-md font-headline-md text-on-surface">Pollution Approval</h2>
+<span class="px-2 py-0.5 bg-error/10 text-error text-label-sm rounded uppercase font-bold">High Risk</span>
+</div>
+<p class="text-body-sm text-on-surface-variant">State Environment Conservation Board • Ref: CG-ENV-2026-8841</p>
+</div>
+</div>
+<div class="flex items-center gap-space-3 w-full md:w-auto">
+<button class="flex-1 md:flex-initial px-4 py-2 border border-primary text-primary text-body-md font-semibold rounded hover:bg-primary/5 transition-colors">
+            View Approval
+          </button>
+<button class="flex-1 md:flex-initial px-4 py-2 bg-error text-on-error text-body-md font-semibold rounded hover:bg-error/90 transition-colors">
+            View Required Action
+          </button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-4 bg-surface-container-low p-space-4 rounded border border-surface-variant/60">
+<div>
+<span class="text-label-sm text-outline uppercase font-semibold">Identified Reason</span>
+<p class="text-body-md text-on-surface mt-1">A required document is missing and production-capacity information differs across submitted documents.</p>
+</div>
+<div>
+<span class="text-label-sm text-outline uppercase font-semibold">Projected Impact</span>
+<p class="text-body-md text-error mt-1 font-semibold">May delay next stage operational clearance by estimated 14 days.</p>
+</div>
+<div>
+<span class="text-label-sm text-outline uppercase font-semibold">Recommended Action</span>
+<p class="text-body-md text-on-surface mt-1">Correct production-capacity information and upload missing environmental clearance affidavit.</p>
+</div>
+</div>
+</div>
+<!-- Two Column Grid: Recommended Next Action & Approval Summary -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-8">
+<!-- Recommended Next Action Section (7 cols) -->
+<div class="lg:col-span-7 bg-surface-container-lowest rounded border border-surface-variant shadow-sm p-space-6 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-4">
+<div>
+<span class="text-label-sm text-primary uppercase font-semibold tracking-wide">Actionable Intelligence</span>
+<h3 class="text-headline-md font-headline-md text-on-surface mt-1">Resolve production-capacity mismatch</h3>
+</div>
+<span class="px-2.5 py-1 bg-tertiary-fixed text-on-tertiary-fixed text-label-sm rounded font-semibold">Priority 1</span>
+</div>
+<p class="text-body-sm text-on-surface-variant mb-space-6">Complete the following verification checklist to align documentation with Chhattisgarh State Industrial Development Corporation records.</p>
+<div class="flex flex-col gap-space-3 mb-space-6">
+<label class="flex items-center gap-space-3 p-3 bg-surface-container-low rounded border border-surface-variant/60 cursor-pointer hover:bg-surface-container transition-colors">
+<input checked="" class="w-4 h-4 text-primary rounded border-outline focus:ring-primary" type="checkbox">
+<div class="flex flex-col">
+<span class="text-body-md font-semibold text-on-surface">Review Project Report (PR-2026-V2.pdf)</span>
+<span class="text-body-sm text-outline">Verified capacity: 5,000 MT/annum cold storage</span>
+</div>
+</label>
+<label class="flex items-center gap-space-3 p-3 bg-surface-container-low rounded border border-surface-variant/60 cursor-pointer hover:bg-surface-container transition-colors">
+<input checked="" class="w-4 h-4 text-primary rounded border-outline focus:ring-primary" type="checkbox">
+<div class="flex flex-col">
+<span class="text-body-md font-semibold text-on-surface">Review Business Profile (Udyam Registration)</span>
+<span class="text-body-sm text-outline">Matched enterprise classification and address</span>
+</div>
+</label>
+<label class="flex items-center gap-space-3 p-3 bg-surface-container-low rounded border border-surface-variant/60 cursor-pointer hover:bg-surface-container transition-colors">
+<input class="w-4 h-4 text-primary rounded border-outline focus:ring-primary" type="checkbox">
+<div class="flex flex-col">
+<span class="text-body-md font-semibold text-on-surface">Correct inconsistent information in Form-B</span>
+<span class="text-body-sm text-error">Pending correction of throughput metrics</span>
+</div>
+</label>
+<label class="flex items-center gap-space-3 p-3 bg-surface-container-low rounded border border-surface-variant/60 cursor-pointer hover:bg-surface-container transition-colors">
+<input class="w-4 h-4 text-primary rounded border-outline focus:ring-primary" type="checkbox">
+<div class="flex flex-col">
+<span class="text-body-md font-semibold text-on-surface">Upload updated document (Water Analysis Report)</span>
+<span class="text-body-sm text-error">Missing certified laboratory annexure</span>
+</div>
+</label>
+</div>
+</div>
+<div class="flex items-center justify-between pt-space-4 border-t border-surface-variant/40">
+<span class="text-body-sm text-outline">2 of 4 checklist items completed</span>
+<button class="px-6 py-2.5 bg-primary text-on-primary text-body-md font-semibold rounded hover:bg-primary-container transition-colors shadow-sm">
+            Resolve Issue
+          </button>
+</div>
+</div>
+<!-- Approval Summary Section (5 cols) -->
+<div class="lg:col-span-5 bg-surface-container-lowest rounded border border-surface-variant shadow-sm p-space-6 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-4">
+<div>
+<span class="text-label-sm text-primary uppercase font-semibold tracking-wide">Lifecycle Overview</span>
+<h3 class="text-headline-md font-headline-md text-on-surface mt-1">Approval Summary</h3>
+</div>
+<span class="text-headline-sm font-headline-sm text-on-surface">18 Total</span>
+</div>
+<p class="text-body-sm text-on-surface-variant mb-space-6">Current distribution of regulatory permissions across municipal, state, and central departments.</p>
+<div class="flex flex-col gap-space-4 mb-space-6">
+<div>
+<div class="flex justify-between text-body-sm mb-1">
+<span class="font-semibold text-on-surface flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>Completed Approvals</span>
+<span class="font-semibold text-on-surface">8 / 18</span>
+</div>
+<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 44.4%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-body-sm mb-1">
+<span class="font-semibold text-on-surface flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>In Progress</span>
+<span class="font-semibold text-on-surface">5 / 18</span>
+</div>
+<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+<div class="bg-primary-container h-full rounded-full" style="width: 27.7%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-body-sm mb-1">
+<span class="font-semibold text-on-surface flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-error"></span>Pending / Action Required</span>
+<span class="font-semibold text-on-surface">3 / 18</span>
+</div>
+<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+<div class="bg-error h-full rounded-full" style="width: 16.6%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-body-sm mb-1">
+<span class="font-semibold text-on-surface flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-outline"></span>Not Initiated</span>
+<span class="font-semibold text-on-surface">2 / 18</span>
+</div>
+<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+<div class="bg-outline h-full rounded-full" style="width: 11.1%"></div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<button class="w-full py-2.5 border border-primary text-primary text-body-md font-semibold rounded hover:bg-primary/5 transition-colors text-center">
+            View Full Approval Roadmap
+          </button>
+</div>
+</div>
+</div>
+<!-- PARALLEL WORK OPPORTUNITIES SECTION -->
+<div class="bg-surface-container-lowest rounded border border-surface-variant shadow-sm p-space-6">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-space-4 mb-space-6">
+<div>
+<span class="text-label-sm text-primary uppercase font-semibold tracking-wide">Workflow Optimization</span>
+<h3 class="text-headline-md font-headline-md text-on-surface mt-1">Parallel Work Opportunities</h3>
+<p class="text-body-sm text-on-surface-variant mt-1">6 activities currently proceeding in parallel streams to accelerate time-to-market.</p>
+</div>
+<div class="px-3 py-1.5 bg-secondary-container text-on-secondary-container text-body-sm rounded font-medium flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">account_tree</span>
+          Enterprise Workflow Visualization
+        </div>
+</div>
+<!-- Workflow Timeline / Dependency Graph -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-space-4 relative">
+<!-- Step 1 -->
+<div class="bg-surface-container-low p-space-4 rounded border border-surface-variant/60 flex flex-col justify-between">
+<div>
+<span class="text-label-sm text-outline uppercase font-semibold">Phase 1</span>
+<h4 class="text-headline-sm font-headline-sm text-on-surface mt-1">Business Setup</h4>
+<p class="text-body-sm text-outline mt-1">Entity registration, land lease, and layout sanction.</p>
+</div>
+<div class="mt-4 pt-3 border-t border-surface-variant/40 flex items-center justify-between">
+<span class="px-2 py-0.5 bg-secondary/10 text-secondary text-label-sm rounded font-semibold">2 Completed</span>
+<span class="text-body-sm text-outline font-medium">Stream A</span>
+</div>
+</div>
+<!-- Step 2 (Parallel Stream) -->
+<div class="bg-surface-container-low p-space-4 rounded border border-surface-variant/60 flex flex-col justify-between">
+<div>
+<span class="text-label-sm text-outline uppercase font-semibold">Phase 2 (Parallel)</span>
+<h4 class="text-headline-sm font-headline-sm text-on-surface mt-1">Infrastructure NOCs</h4>
+<div class="flex flex-col gap-1 mt-2">
+<div class="text-body-sm text-on-surface flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Factory Fire NOC <span class="text-xs text-outline">(Active)</span>
+</div>
+<div class="text-body-sm text-on-surface flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Electricity Approval <span class="text-xs text-outline">(Active)</span>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-surface-variant/40 flex items-center justify-between">
+<span class="px-2 py-0.5 bg-primary-container/20 text-on-primary-container text-label-sm rounded font-semibold">2 In Progress</span>
+<span class="text-body-sm text-outline font-medium">Stream B</span>
+</div>
+</div>
+<!-- Step 3 (Critical Dependency) -->
+<div class="bg-error-container/30 p-space-4 rounded border-2 border-error/50 flex flex-col justify-between relative">
+<div class="absolute -top-3 right-3 bg-error text-on-error text-label-sm px-2 py-0.5 rounded uppercase font-bold">
+            Critical Dependency
+          </div>
+<div>
+<span class="text-label-sm text-error uppercase font-semibold">Phase 3 (Bottleneck)</span>
+<h4 class="text-headline-sm font-headline-sm text-on-surface mt-1">Pollution Approval</h4>
+<p class="text-body-sm text-error mt-1 font-semibold">Required before final operational clearance.</p>
+</div>
+<div class="mt-4 pt-3 border-t border-error/20 flex items-center justify-between">
+<span class="px-2 py-0.5 bg-error/10 text-error text-label-sm rounded font-semibold">Action Required</span>
+<span class="text-body-sm text-error font-medium">Stream C</span>
+</div>
+</div>
+<!-- Step 4 -->
+<div class="bg-surface-container-low p-space-4 rounded border border-surface-variant/60 flex flex-col justify-between opacity-75">
+<div>
+<span class="text-label-sm text-outline uppercase font-semibold">Phase 4</span>
+<h4 class="text-headline-sm font-headline-sm text-on-surface mt-1">Operational Approval</h4>
+<p class="text-body-sm text-outline mt-1">Commercial production license &amp; factory inspector sign-off.</p>
+</div>
+<div class="mt-4 pt-3 border-t border-surface-variant/40 flex items-center justify-between">
+<span class="px-2 py-0.5 bg-outline/10 text-outline text-label-sm rounded font-semibold">Locked</span>
+<span class="text-body-sm text-outline font-medium">Stream D</span>
+</div>
+</div>
+</div>
+<!-- Parallel Work Activities Detail List -->
+<div class="mt-space-6 pt-space-6 border-t border-surface-variant/40 grid grid-cols-1 md:grid-cols-3 gap-space-4">
+<div class="flex items-center gap-space-3 p-3 bg-surface-container-low rounded">
+<span class="material-symbols-outlined text-secondary">bolt</span>
+<div>
+<span class="text-body-md font-semibold text-on-surface block">Electrical Sanction (33kV)</span>
+<span class="text-body-sm text-outline">Proceeding in parallel with civil construction</span>
+</div>
+</div>
+<div class="flex items-center gap-space-3 p-3 bg-surface-container-low rounded">
+<span class="material-symbols-outlined text-secondary">local_fire_department</span>
+<div>
+<span class="text-body-md font-semibold text-on-surface block">Fire Safety Compliance</span>
+<span class="text-body-sm text-outline">Inspection scheduled for next Tuesday</span>
+</div>
+</div>
+<div class="flex items-center gap-space-3 p-3 bg-surface-container-low rounded">
+<span class="material-symbols-outlined text-secondary">water_drop</span>
+<div>
+<span class="text-body-md font-semibold text-on-surface block">Groundwater Extraction NOC</span>
+<span class="text-body-sm text-outline">Document verification completed</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div></main><footer class="w-full bg-surface-container-low text-on-surface-variant py-space-12 border-t border-surface-variant"><div class="max-w-7xl mx-auto px-gutter-desktop grid grid-cols-1 md:grid-cols-4 gap-space-8 mb-space-8"><div class="flex flex-col gap-space-3"><h4 class="text-headline-sm font-headline-sm text-on-surface">NitiPath Platform</h4><p class="text-body-sm">Institutional Intelligence for Industrial Approvals and Regulatory Compliance under SIH 2026 framework.</p></div><div class="flex flex-col gap-space-3"><h4 class="text-headline-sm font-headline-sm text-on-surface">Platform Links</h4><a class="text-body-sm hover:text-primary transition-colors" href="#">Approval Journey</a><a class="text-body-sm hover:text-primary transition-colors" href="#">Compliance Engine</a><a class="text-body-sm hover:text-primary transition-colors" href="#">Regulatory Copilot</a></div><div class="flex flex-col gap-space-3"><h4 class="text-headline-sm font-headline-sm text-on-surface">Resources</h4><a class="text-body-sm hover:text-primary transition-colors" href="#">Documentation</a><a class="text-body-sm hover:text-primary transition-colors" href="#">Risk &amp; Dependencies</a><a class="text-body-sm hover:text-primary transition-colors" href="#">Schemes Support</a></div><div class="flex flex-col gap-space-3"><h4 class="text-headline-sm font-headline-sm text-on-surface">Legal &amp; Notice</h4><a class="text-body-sm hover:text-primary transition-colors" href="#">Privacy Policy</a><a class="text-body-sm hover:text-primary transition-colors" href="#">Terms of Service</a><a class="text-body-sm hover:text-primary transition-colors" href="#">Disclaimer</a></div></div><div class="max-w-7xl mx-auto px-gutter-desktop pt-space-6 border-t border-surface-variant text-center"><p class="text-label-sm text-outline">Official Notice: This platform provides automated regulatory guidance and compliance intelligence. Final statutory approvals remain subject to authorized government agency evaluations.</p></div></footer>
+
+</body></html>

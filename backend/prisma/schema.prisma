@@ -1,0 +1,213 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  password     String
+  name         String
+  role         String        @default("BUSINESS_USER") // BUSINESS_USER, ADMIN, DEPARTMENT_OFFICER
+  department   String?
+  phone        String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  businesses   Business[]
+  auditLogs    AuditLog[]
+  notifications Notification[]
+}
+
+model Business {
+  id                  String        @id @default(uuid())
+  userId              String
+  user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name                String
+  entityType          String        @default("Private Limited")
+  pan                 String?
+  gstin               String?
+  address             String
+  city                String
+  state               String        @default("Chhattisgarh")
+  pinCode             String?
+  sector              String        // Food Processing, Solar, Steel, Pharma, etc.
+  investmentCr        Float         @default(5.0)
+  employees           Int           @default(50)
+  landAcres           Float         @default(5.0)
+  builtUpAreaSqFt     Float?        @default(10000.0)
+  powerRequirementKw  Float?        @default(250.0)
+  waterRequirementKld Float?        @default(50.0)
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  applications        Application[]
+}
+
+model Application {
+  id                     String           @id @default(uuid())
+  applicationNumber      String           @unique
+  businessId             String
+  business               Business         @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  projectTitle           String
+  description            String?
+  pollutionCategory      String           @default("ORANGE") // GREEN, ORANGE, RED, WHITE
+  status                 String           @default("IN_PROGRESS") // DRAFT, IN_PROGRESS, UNDER_REVIEW, APPROVED, REJECTED, ACTION_REQUIRED
+  readinessScore         Int              @default(72)
+  riskLevel              String           @default("HIGH") // LOW, MEDIUM, HIGH
+  estimatedDays          Int              @default(65)
+  parallelTracksCount    Int              @default(3)
+  totalApprovals         Int              @default(18)
+  completedApprovals     Int              @default(8)
+  criticalPathApprovals  Int              @default(4)
+  submittedAt            DateTime?
+  approvedAt             DateTime?
+  createdAt              DateTime         @default(now())
+  updatedAt              DateTime         @updatedAt
+  approvals              Approval[]
+  documents              Document[]
+  riskItems              RiskItem[]
+  complianceItems        ComplianceItem[]
+  auditLogs              AuditLog[]
+}
+
+model Approval {
+  id                  String       @id @default(uuid())
+  applicationId       String
+  application         Application  @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  approvalCode        String
+  name                String
+  department          String
+  category            String       // Land, Environment, Safety, Power, Municipal, Operating
+  stage               Int          @default(1)
+  status              String       @default("NOT_STARTED") // NOT_STARTED, PENDING_DOCS, SUBMITTED, UNDER_REVIEW, APPROVED, REJECTED, QUERIED
+  slaDays             Int          @default(30)
+  expectedDays        Int          @default(25)
+  parallelGroupId     String?      // TRACK_A, TRACK_B, TRACK_C, CRITICAL_PATH
+  isCriticalPath      Boolean      @default(false)
+  queryComment        String?
+  officerNotes        String?
+  requiredDocsJson    String?      // Stored JSON array string: ["Land Title Deed", "Site Layout Plan"]
+  dependenciesJson    String?      // Stored JSON array string: ["APPR_LAND_ALLOT"]
+  submittedAt         DateTime?
+  approvedAt          DateTime?
+  dueDate             DateTime?
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+  documents           Document[]
+  riskItems           RiskItem[]
+}
+
+model ApprovalRule {
+  id                   String       @id @default(uuid())
+  sector               String       // "Food Processing", "ALL", "Manufacturing"
+  scale                String       @default("MSME") // MSME, LARGE, MEGA
+  approvalCode         String
+  name                 String
+  department           String
+  slaDays              Int          @default(30)
+  requiredDocsJson     String       // JSON array of strings
+  dependenciesJson     String       // JSON array of approval codes
+  triggersJson         String?      // Conditions (e.g. power > 100KW, land > 2 acres)
+  parallelGroup        String?
+  isMandatory          Boolean      @default(true)
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+}
+
+model Document {
+  id                   String       @id @default(uuid())
+  applicationId        String
+  application          Application  @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  approvalId           String?
+  approval             Approval?    @relation(fields: [approvalId], references: [id], onDelete: SetNull)
+  docType              String       // "SITE_PLAN", "DPR", "PAN", "POLLUTION_CTE", etc.
+  name                 String
+  fileName             String?
+  filePath             String?
+  fileSizeBytes        Int?
+  mimeType             String?
+  status               String       @default("NOT_UPLOADED") // NOT_UPLOADED, UPLOADED, VERIFIED, REJECTED, MISMATCH_DETECTED
+  extractedText        String?
+  extractedMetadataJson String?     // e.g. {"builtUpAreaSqFt": 10000, "capacity": "50 TPD"}
+  mismatchDetailsJson  String?      // e.g. {"conflictsWith": "DPR", "field": "builtUpAreaSqFt", "detectedValue": 10000, "expectedValue": 12500, "severity": "HIGH"}
+  uploadedAt           DateTime?
+  verifiedAt           DateTime?
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+}
+
+model RiskItem {
+  id                   String       @id @default(uuid())
+  applicationId        String
+  application          Application  @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  approvalId           String?
+  approval             Approval?    @relation(fields: [approvalId], references: [id], onDelete: SetNull)
+  riskType             String       // "DOCUMENT_INCONSISTENCY", "BOTTLENECK_DELAY", "REGULATORY_CHANGE", "CRITICAL_PATH_DEPENDENCY"
+  severity             String       @default("HIGH") // LOW, MEDIUM, HIGH, CRITICAL
+  title                String
+  description          String
+  recommendation       String
+  isResolved           Boolean      @default(false)
+  resolvedAt           DateTime?
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+}
+
+model ComplianceItem {
+  id                   String       @id @default(uuid())
+  applicationId        String
+  application          Application  @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  title                String
+  department           String
+  regulation           String
+  frequency            String       @default("ANNUAL") // ONE_TIME, MONTHLY, QUARTERLY, ANNUAL
+  dueDate              DateTime
+  status               String       @default("UPCOMING") // PENDING, COMPLIANT, OVERDUE, UPCOMING
+  lastFiledDate        DateTime?
+  penaltyRisk          String?      // "₹50,000 fine + notice"
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+}
+
+model Notification {
+  id                   String       @id @default(uuid())
+  userId               String
+  user                 User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title                String
+  message              String
+  type                 String       @default("INFO") // INFO, WARNING, ALERT, SUCCESS
+  isRead               Boolean      @default(false)
+  linkUrl              String?
+  createdAt            DateTime     @default(now())
+}
+
+model AuditLog {
+  id                   String       @id @default(uuid())
+  userId               String?
+  user                 User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  applicationId        String?
+  application          Application? @relation(fields: [applicationId], references: [id], onDelete: SetNull)
+  action               String       // "LOGIN", "DOCUMENT_UPLOAD", "AUDIT_RUN", "APPROVAL_REVIEW", "RISK_RESOLVED"
+  details              String?
+  ipAddress            String?
+  userAgent            String?
+  createdAt            DateTime     @default(now())
+}
+
+model SupportScheme {
+  id                   String       @id @default(uuid())
+  schemeCode           String       @unique
+  title                String
+  ministry             String
+  sector               String
+  subsidyPercentage    Float        @default(35.0)
+  maxCapCr             Float        @default(5.0)
+  eligibilityCriteriaJson String   // JSON array of strings
+  applicationUrl       String?
+  status               String       @default("ACTIVE")
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+}

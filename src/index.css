@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@theme {
+  --color-govNavy-50: #F0F4F8;
+  --color-govNavy-100: #D9E2EC;
+  --color-govNavy-200: #BCCCDC;
+  --color-govNavy-500: #1E3A8A;
+  --color-govNavy-600: #172554;
+  --color-govNavy-700: #0F2C59;
+  --color-govNavy-800: #0B2545;
+  --color-govNavy-850: #081B38;
+  --color-govNavy-900: #081B33;
+  --color-govNavy-950: #051124;
+
+  --color-govSaffron-50: #FFF7ED;
+  --color-govSaffron-100: #FFEDD5;
+  --color-govSaffron-500: #EA580C;
+  --color-govSaffron-600: #C2410C;
+  --color-govSaffron-700: #9A3412;
+
+  --color-govGreen-50: #F0FDF4;
+  --color-govGreen-100: #DCFCE7;
+  --color-govGreen-500: #16A34A;
+  --color-govGreen-600: #15803D;
+  --color-govGreen-700: #166534;
+}
+
+:root {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* Custom accessible scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Print styling for audit export */
+@media print {
+  header, aside, footer, button {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}
