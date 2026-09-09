@@ -16,6 +16,11 @@ export class AuthService {
       throw new Error('User with this email already exists');
     }
 
+    // Security Hardening: Officer and government administrator accounts MUST NOT be creatable via public /register
+    if (input.role && input.role !== 'BUSINESS_USER') {
+      throw new Error('Government and regulatory officer accounts cannot be created via the public business registration portal.');
+    }
+
     const hashedPassword = await bcrypt.hash(input.password, 10);
 
     const user = await prisma.user.create({

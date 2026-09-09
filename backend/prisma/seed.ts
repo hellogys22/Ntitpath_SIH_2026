@@ -18,6 +18,7 @@ async function main() {
   await prisma.application.deleteMany();
   await prisma.business.deleteMany();
   await prisma.user.deleteMany();
+  await prisma.officer.deleteMany();
   await prisma.supportScheme.deleteMany();
   await prisma.approvalRule.deleteMany();
 
@@ -445,6 +446,52 @@ async function main() {
       ipAddress: '127.0.0.1',
     },
   });
+
+  // 11. Seed Pre-authorized Department Officers
+  // NOTE: In production, government officer accounts are provisioned via NIC / State Single Window
+  // administrative credentials and digital certificates (e-Sign/DSC). Real officer onboarding goes
+  // through an out-of-band administrative verification process outside the public registration portal.
+  const officers = [
+    {
+      email: 'officer@gov.in',
+      name: 'Dr. Ananya Verma, IAS',
+      department: 'Commerce & Industries Department',
+      designation: 'Joint Director of Industries',
+      badgeNumber: 'CG-IND-0824',
+      isActive: true,
+    },
+    {
+      email: 'epcb.officer@cg.gov.in',
+      name: 'Shri Rajesh Kumar Kujur',
+      department: 'Environment & Pollution Control Board',
+      designation: 'Senior Environmental Engineer',
+      badgeNumber: 'CECB-EE-1102',
+      isActive: true,
+    },
+    {
+      email: 'dish.officer@cg.gov.in',
+      name: 'Shri Vikramaditya Sahu',
+      department: 'Directorate of Industrial Safety & Health (DISH)',
+      designation: 'Deputy Chief Inspector of Factories',
+      badgeNumber: 'DISH-CG-0419',
+      isActive: true,
+    },
+    {
+      email: 'admin@demo.com',
+      name: 'System Administrative Officer',
+      department: 'State Single Window Clearance Directorate',
+      designation: 'Chief Technology Administrator',
+      badgeNumber: 'SWC-ADMIN-0001',
+      isActive: true,
+    },
+  ];
+
+  for (const off of officers) {
+    await prisma.officer.create({
+      data: off,
+    });
+  }
+  console.log(`🛡️ Seeded ${officers.length} pre-authorized government regulatory officers`);
 
   console.log('✅ Seeding completed successfully!');
 }

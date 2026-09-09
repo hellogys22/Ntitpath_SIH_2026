@@ -180,61 +180,25 @@ export const LoginPage: React.FC = () => {
           {/* Right Column: Official Login Form */}
           <div className="lg:col-span-7 p-6 sm:p-8 bg-white">
             
-            {/* Mode Switcher Tabs */}
-            <div className="flex border-b border-slate-200 mb-6">
-              <button
-                type="button"
-                onClick={() => handleTabSwitch('business')}
-                className={`flex-1 pb-3 text-xs font-bold transition-all border-b-2 flex items-center justify-center gap-2 cursor-pointer ${
-                  activeTab === 'business'
-                    ? 'border-govNavy-700 text-govNavy-900 bg-slate-50/50'
-                    : 'border-transparent text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                <Building2 className="w-4 h-4 text-govNavy-700" />
-                <span>उद्योग / Business Applicant</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleTabSwitch('admin')}
-                className={`flex-1 pb-3 text-xs font-bold transition-all border-b-2 flex items-center justify-center gap-2 cursor-pointer ${
-                  activeTab === 'admin'
-                    ? 'border-amber-600 text-amber-900 bg-amber-50/50'
-                    : 'border-transparent text-slate-500 hover:text-slate-800'
-                }`}
-              >
-                <ShieldCheck className="w-4 h-4 text-amber-700" />
-                <span>विभागीय अधिकारी / Department Officer</span>
-              </button>
+            {/* Business Applicant Single Portal Header */}
+            <div className="flex items-center gap-2.5 pb-4 mb-6 border-b border-slate-200">
+              <div className="p-2 rounded-lg bg-govNavy-50 border border-govNavy-200 text-govNavy-800">
+                <Building2 className="w-5 h-5 text-govNavy-800" />
+              </div>
+              <div>
+                <h3 className="text-sm font-extrabold text-slate-900">
+                  उद्योग लॉगिन / Business Applicant Sign In
+                </h3>
+                <p className="text-[11px] text-slate-500">
+                  Access your enterprise compliance roadmap &amp; statutory approval intelligence
+                </p>
+              </div>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              
-              {activeTab === 'admin' && (
-                <div>
-                  <label className="block text-xs font-bold text-slate-800 mb-1">
-                    संबद्ध विभाग / Administrative Department <span className="text-rose-600">*</span>
-                  </label>
-                  <select
-                    value={department}
-                    onChange={(e) => setDepartment(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-govNavy-700"
-                  >
-                    <option>Environment & Pollution Control Board</option>
-                    <option>Directorate of Industrial Safety & Health (DISH)</option>
-                    <option>State Fire & Emergency Services</option>
-                    <option>State Power Distribution Corporation (DISCOM)</option>
-                    <option>Commerce & Industries Department</option>
-                  </select>
-                </div>
-              )}
-
               <div>
                 <label className="block text-xs font-bold text-slate-800 mb-1">
-                  {activeTab === 'business' 
-                    ? 'पंजीकृत ईमेल या मोबाइल / Registered Email or Mobile ID' 
-                    : 'अधिकारी उपयोगकर्ता आईडी / Official Officer User ID'} <span className="text-rose-600">*</span>
+                  पंजीकृत ईमेल या मोबाइल / Registered Email or Mobile ID <span className="text-rose-600">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -242,7 +206,7 @@ export const LoginPage: React.FC = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    placeholder={activeTab === 'business' ? 'Enter business email or mobile' : 'Enter official user ID or email'}
+                    placeholder="Enter business email or mobile"
                     className="w-full pl-9 pr-3 py-2 bg-white border border-slate-300 rounded-md text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-govNavy-700"
                   />
                   <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
@@ -349,14 +313,23 @@ export const LoginPage: React.FC = () => {
                 </>
               )}
 
-              {activeTab === 'business' && (
-                <div className="pt-2 text-center text-xs text-slate-600">
+              <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-600 gap-2">
+                <div>
                   New enterprise registration?{' '}
                   <Link to="/register" className="font-bold text-govNavy-700 hover:underline">
                     Register Business Account
                   </Link>
                 </div>
-              )}
+                <div>
+                  <Link 
+                    to="/officer-login" 
+                    className="text-[11px] text-slate-400 hover:text-slate-700 flex items-center gap-1 transition-colors group"
+                  >
+                    <Lock className="w-3 h-3 text-slate-400 group-hover:text-slate-600" />
+                    <span>Government / Officer Login →</span>
+                  </Link>
+                </div>
+              </div>
             </form>
 
           </div>
@@ -382,7 +355,9 @@ export const LoginPage: React.FC = () => {
             <span>•</span>
             <span>Security Guidelines</span>
             <span>•</span>
-            <span>Hyperlinking Policy</span>
+            <Link to="/officer-login" className="hover:text-slate-200 text-slate-400">
+              Government / Officer Portal
+            </Link>
           </div>
 
           <p className="text-[10px] text-slate-500">

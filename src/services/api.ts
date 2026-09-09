@@ -68,6 +68,42 @@ class ApiClient {
     return res.data;
   }
 
+  async sendOtp(email: string, type: 'business' | 'officer') {
+    return this.request<ApiResponse<any>>('/auth/otp/send', {
+      method: 'POST',
+      body: JSON.stringify({ email, type }),
+    });
+  }
+
+  async verifyOtp(params: {
+    email: string;
+    otp: string;
+    type: 'business' | 'officer';
+    companyName?: string;
+    mobile?: string;
+    department?: string;
+  }) {
+    const res = await this.request<ApiResponse<any>>('/auth/otp/verify', {
+      method: 'POST',
+      body: JSON.stringify(params),
+    });
+    if (res.data?.token) {
+      this.setToken(res.data.token);
+    }
+    return res.data;
+  }
+
+  async verifySession(accessToken: string, type: 'business' | 'officer', companyName?: string, mobile?: string) {
+    const res = await this.request<ApiResponse<any>>('/auth/otp/verify-session', {
+      method: 'POST',
+      body: JSON.stringify({ accessToken, type, companyName, mobile }),
+    });
+    if (res.data?.token) {
+      this.setToken(res.data.token);
+    }
+    return res.data;
+  }
+
   async getMe() {
     return this.request<ApiResponse<any>>('/auth/me');
   }

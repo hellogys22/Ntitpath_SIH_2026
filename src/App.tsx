@@ -5,6 +5,7 @@ import { Toast } from './components/ui/Toast';
 
 // Public Auth Pages (Official Gov Style)
 import { LoginPage } from './pages/public/LoginPage';
+import { OfficerLoginPage } from './pages/public/OfficerLoginPage';
 import { RegisterPage } from './pages/public/RegisterPage';
 import { LandingPage } from './pages/public/LandingPage';
 import { DemoModeBanner } from './components/common/DemoModeBanner';
@@ -55,11 +56,20 @@ const LoginGatekeeper: React.FC = () => {
   return <Navigate to={role === 'admin' ? '/admin/dashboard' : '/dashboard'} replace />;
 };
 
+// Officer Login gatekeeper: renders OfficerLoginPage if not logged in; redirects to admin dashboard if logged in
+const OfficerLoginGatekeeper: React.FC = () => {
+  const { user, role } = useApp();
+  if (!user) {
+    return <OfficerLoginPage />;
+  }
+  return <Navigate to={role === 'admin' ? '/admin/dashboard' : '/dashboard'} replace />;
+};
+
 // Protected Route for Business Users
 const BusinessRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
   const { user, role } = useApp();
   if (!user) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/login" replace />;
   }
   if (role !== 'business') {
     return <Navigate to="/admin/dashboard" replace />;
@@ -71,7 +81,7 @@ const BusinessRoute: React.FC<{ children: React.ReactElement }> = ({ children })
 const AdminRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
   const { user, role } = useApp();
   if (!user) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/officer-login" replace />;
   }
   if (role !== 'admin') {
     return <Navigate to="/dashboard" replace />;
@@ -91,8 +101,9 @@ const AppContent: React.FC = () => {
         <Route path="/" element={<RootGatekeeper />} />
         <Route path="/landing" element={<LandingPage />} />
         <Route path="/login" element={<LoginGatekeeper />} />
+        <Route path="/officer-login" element={<OfficerLoginGatekeeper />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/assessment" element={<AssessmentPage />} />
+        <Route path="/assessment" element={<BusinessRoute><AssessmentPage /></BusinessRoute>} />
 
         {/* Business User Portal */}
         <Route path="/dashboard" element={<BusinessRoute><DashboardPage /></BusinessRoute>} />
