@@ -27,7 +27,7 @@ export const Navbar: React.FC<NavbarProps> = ({ toggleMobileMenu, isMobileMenuOp
   const [showHelpModal, setShowHelpModal] = useState(false);
 
   const unreadCount = notifications.filter(n => !n.read && n.recipientRole === role).length;
-  const isPublicPage = location.pathname === '/' || location.pathname === '/login' || location.pathname === '/register';
+  const isPublicPage = location.pathname === '/' || location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/landing';
 
   return (
     <>
