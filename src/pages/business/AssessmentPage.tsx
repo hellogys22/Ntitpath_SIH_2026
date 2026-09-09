@@ -30,7 +30,7 @@ import { Footer } from '../../components/layout/Footer';
 
 export const AssessmentPage: React.FC = () => {
   const navigate = useNavigate();
-  const { businessProfile, updateBusinessProfile, applyGeneratedPlan, showToast } = useApp();
+  const { businessProfile, updateBusinessProfile, applyGeneratedPlan, showToast, user, setUser } = useApp();
   
   const [step, setStep] = useState<number>(1);
   
@@ -180,6 +180,17 @@ export const AssessmentPage: React.FC = () => {
         employees: Number(formData.employees),
         readinessScore: result.readinessScore,
       });
+
+      // Ensure authenticated business session for onboarding guest
+      if (!user) {
+        setUser({
+          id: 'U-' + Date.now(),
+          name: formData.companyName.trim(),
+          email: 'applicant@enterprise.in',
+          role: 'business',
+          companyName: formData.companyName.trim(),
+        });
+      }
 
       // 5. Apply dynamic approvals and document checklist to AppContext
       applyGeneratedPlan({

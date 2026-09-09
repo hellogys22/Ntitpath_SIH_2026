@@ -15,14 +15,17 @@ import {
   Search,
   Shield,
   Clock,
-  Layers
+  Layers,
+  Eye
 } from 'lucide-react';
+import { useApp } from '../../context/AppContext';
 import { IntelligenceBanner } from '../../components/common/IntelligenceBanner';
 import { Navbar } from '../../components/layout/Navbar';
 import { Footer } from '../../components/layout/Footer';
 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
+  const { enterDemoMode } = useApp();
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
@@ -55,9 +58,21 @@ export const LandingPage: React.FC = () => {
               <ArrowRight className="w-4 h-4" />
             </Link>
 
+            <button
+              type="button"
+              onClick={() => {
+                enterDemoMode();
+                navigate('/dashboard');
+              }}
+              className="w-full sm:w-auto px-7 py-3.5 bg-govNavy-900/40 hover:bg-amber-500/10 text-amber-300 hover:text-amber-200 font-bold text-sm rounded-xl border-2 border-amber-400/60 hover:border-amber-400 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+            >
+              <Eye className="w-4 h-4 text-amber-400" />
+              <span>View Demo Dashboard</span>
+            </button>
+
             <a
               href="#how-it-works"
-              className="w-full sm:w-auto px-8 py-3.5 bg-govNavy-800 hover:bg-govNavy-700 text-white font-bold text-sm rounded-xl border border-govNavy-600 transition-colors flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-6 py-3.5 bg-govNavy-800 hover:bg-govNavy-700 text-slate-200 font-bold text-sm rounded-xl border border-govNavy-600 transition-colors flex items-center justify-center gap-2"
             >
               <span>Explore How It Works</span>
             </a>
@@ -284,6 +299,18 @@ export const LandingPage: React.FC = () => {
               <span>Start Your Approval Journey</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
+
+            <button
+              type="button"
+              onClick={() => {
+                enterDemoMode();
+                navigate('/dashboard');
+              }}
+              className="px-6 py-3.5 bg-transparent hover:bg-amber-500/10 text-amber-300 hover:text-amber-200 font-bold text-sm rounded-xl border-2 border-amber-400/60 hover:border-amber-400 transition-all flex items-center gap-2 cursor-pointer"
+            >
+              <Eye className="w-4 h-4 text-amber-400" />
+              <span>View Demo Dashboard</span>
+            </button>
 
             <Link
               to="/login"

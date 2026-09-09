@@ -6,6 +6,8 @@ import { Toast } from './components/ui/Toast';
 // Public Auth Pages (Official Gov Style)
 import { LoginPage } from './pages/public/LoginPage';
 import { RegisterPage } from './pages/public/RegisterPage';
+import { LandingPage } from './pages/public/LandingPage';
+import { DemoModeBanner } from './components/common/DemoModeBanner';
 
 // Business Pages
 import { AssessmentPage } from './pages/business/AssessmentPage';
@@ -35,8 +37,17 @@ import { AdminCompliancePage } from './pages/admin/AdminCompliancePage';
 import { AdminNotificationsPage } from './pages/admin/AdminNotificationsPage';
 import { AdminProfilePage } from './pages/admin/AdminProfilePage';
 
-// Root gatekeeper: renders LoginPage if not logged in; redirects to dashboard if logged in
+// Root gatekeeper: renders LandingPage if not logged in; redirects to dashboard if logged in
 const RootGatekeeper: React.FC = () => {
+  const { user, role } = useApp();
+  if (!user) {
+    return <LandingPage />;
+  }
+  return <Navigate to={role === 'admin' ? '/admin/dashboard' : '/dashboard'} replace />;
+};
+
+// Login gatekeeper: renders LoginPage if not logged in; redirects to dashboard if logged in
+const LoginGatekeeper: React.FC = () => {
   const { user, role } = useApp();
   if (!user) {
     return <LoginPage />;
@@ -73,16 +84,18 @@ const AppContent: React.FC = () => {
 
   return (
     <>
+      <DemoModeBanner />
       <Toast message={toastMessage} />
       <Routes>
-        {/* Root Route — Shows Official Government Login First */}
+        {/* Public Routes */}
         <Route path="/" element={<RootGatekeeper />} />
-        <Route path="/login" element={<RootGatekeeper />} />
+        <Route path="/landing" element={<LandingPage />} />
+        <Route path="/login" element={<LoginGatekeeper />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/assessment" element={<AssessmentPage />} />
 
-        {/* Business User Portal (Only Opens After Login) */}
+        {/* Business User Portal */}
         <Route path="/dashboard" element={<BusinessRoute><DashboardPage /></BusinessRoute>} />
-        <Route path="/assessment" element={<BusinessRoute><AssessmentPage /></BusinessRoute>} />
         <Route path="/profile" element={<BusinessRoute><ProfilePage /></BusinessRoute>} />
         <Route path="/approvals" element={<BusinessRoute><ApprovalsPage /></BusinessRoute>} />
         <Route path="/approvals/:id" element={<BusinessRoute><ApprovalDetailPage /></BusinessRoute>} />

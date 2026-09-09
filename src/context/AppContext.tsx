@@ -24,6 +24,13 @@ import {
   initialDepartmentWorkloads, 
   initialNotifications 
 } from '../data/mockData';
+import { 
+  demoBusinessProfile, 
+  demoApprovals, 
+  demoDocuments, 
+  demoRisks, 
+  demoUser 
+} from '../data/demoData';
 import { Language, translations } from '../data/translations';
 import { api } from '../services/api';
 
@@ -63,6 +70,9 @@ interface AppContextType {
   recalculatePlan: () => void;
   login: (email: string, role: 'business' | 'admin', department?: string) => void;
   logout: () => void;
+  isDemoMode: boolean;
+  enterDemoMode: () => void;
+  exitDemoMode: () => void;
   language: Language;
   toggleLanguage: () => void;
   setLanguage: (lang: Language) => void;
@@ -87,6 +97,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [notifications, setNotifications] = useState<NotificationItem[]>(initialNotifications);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isMismatchResolved, setIsMismatchResolved] = useState<boolean>(false);
+  const [isDemoMode, setIsDemoMode] = useState<boolean>(false);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -263,7 +274,50 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const logout = () => {
     api.setToken(null);
     setUser(null);
+    setIsDemoMode(false);
     showToast(language === 'HI' ? "सफलतापूर्वक लॉग आउट किया गया" : "Logged out successfully");
+  };
+
+  const enterDemoMode = () => {
+    setIsDemoMode(true);
+    setRoleState('business');
+    setUser(demoUser);
+    setBusinessProfile(demoBusinessProfile);
+    setApprovals(demoApprovals);
+    setDocuments(demoDocuments);
+    setRisks(demoRisks);
+    setIsMismatchResolved(false);
+    showToast(
+      language === 'HI'
+        ? "⚡ डेमो मोड सक्रिय: रायपुर फ्रेश फूड्स प्राइवेट लिमिटेड का प्रोजेक्ट लोड किया गया"
+        : "⚡ Demo Mode: Pre-seeded enterprise profile loaded (Raipur Fresh Foods Pvt. Ltd.)"
+    );
+  };
+
+  const exitDemoMode = () => {
+    setIsDemoMode(false);
+    setUser(null);
+    setBusinessProfile({
+      companyName: '',
+      industry: '',
+      location: '',
+      investment: '',
+      employees: 0,
+      land: '',
+      projectType: 'New Manufacturing Unit',
+      readinessScore: 0,
+      contactEmail: '',
+      contactMobile: ''
+    });
+    setApprovals([]);
+    setDocuments([]);
+    setRisks([]);
+    setIsMismatchResolved(false);
+    showToast(
+      language === 'HI'
+        ? "डेमो मोड बंद हुआ। अपना स्वयं का प्रोफ़ाइल बनाएं।"
+        : "Exited Demo Mode. Starting your business assessment."
+    );
   };
 
   const updateBusinessProfile = async (updated: Partial<BusinessProfile>) => {
@@ -491,6 +545,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       recalculatePlan,
       login,
       logout,
+      isDemoMode,
+      enterDemoMode,
+      exitDemoMode,
       language,
       toggleLanguage,
       setLanguage,

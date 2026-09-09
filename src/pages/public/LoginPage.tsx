@@ -11,14 +11,16 @@ import {
   HelpCircle, 
   RefreshCw,
   FileCheck2,
-  AlertCircle
+  AlertCircle,
+  Eye,
+  Sparkles
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { GovHeaderBar } from '../../components/layout/GovHeaderBar';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
-  const { login } = useApp();
+  const { login, enterDemoMode } = useApp();
   const [activeTab, setActiveTab] = useState<'business' | 'admin'>('business');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -142,6 +144,28 @@ export const LoginPage: React.FC = () => {
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                   <span>Parallel approval workflow optimization (DAG engine)</span>
                 </div>
+              </div>
+
+              {/* Instant Demo Sandbox Shortcut */}
+              <div className="mt-6 p-3.5 rounded-lg bg-govNavy-800/80 border border-amber-500/30">
+                <div className="flex items-center gap-1.5 text-amber-300 text-xs font-bold mb-1">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Instant Demo Access</span>
+                </div>
+                <p className="text-[11px] text-slate-300 leading-relaxed">
+                  Want to explore NitiPath without entering credentials? View our pre-seeded Food Processing project (Raipur Fresh Foods Pvt. Ltd. • ₹12.5 Cr).
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    enterDemoMode();
+                    navigate('/dashboard');
+                  }}
+                  className="mt-3 w-full py-2 px-3 bg-amber-500 hover:bg-amber-400 text-govNavy-950 text-xs font-extrabold rounded-md transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-sm hover:shadow active:scale-98"
+                >
+                  <Eye className="w-3.5 h-3.5" />
+                  <span>View Demo Dashboard</span>
+                </button>
               </div>
             </div>
 
@@ -299,6 +323,31 @@ export const LoginPage: React.FC = () => {
                 <span>{activeTab === 'business' ? 'पोर्टल में साइन इन करें / Sign In' : 'अधिकारी साइन इन / Officer Sign In'}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
+
+              {activeTab === 'business' && (
+                <>
+                  <div className="relative my-3.5 text-center">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-slate-200"></div>
+                    </div>
+                    <span className="relative bg-white px-2.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                      या / OR
+                    </span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      enterDemoMode();
+                      navigate('/dashboard');
+                    }}
+                    className="w-full py-2.5 bg-amber-50 hover:bg-amber-100/80 text-amber-950 border-2 border-amber-400/80 text-xs font-extrabold rounded-md shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer hover:border-amber-500"
+                  >
+                    <Eye className="w-4 h-4 text-amber-600" />
+                    <span>View Demo Dashboard (Raipur Fresh Foods • ₹12.5 Cr)</span>
+                  </button>
+                </>
+              )}
 
               {activeTab === 'business' && (
                 <div className="pt-2 text-center text-xs text-slate-600">
