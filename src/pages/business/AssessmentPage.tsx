@@ -21,6 +21,7 @@ import { useApp } from '../../context/AppContext';
 import { 
   RECOGNIZED_SECTORS, 
   RECOGNIZED_DISTRICTS, 
+  PROJECT_TYPES,
   generateRoadmapAndChecklist 
 } from '../../services/rulesEngine';
 import { api } from '../../services/api';
@@ -34,19 +35,44 @@ export const AssessmentPage: React.FC = () => {
   
   const [step, setStep] = useState<number>(1);
   
-  // Initialize form data with typed numeric fields for precise validation
-  const [formData, setFormData] = useState({
-    companyName: businessProfile.companyName || 'Raipur Fresh Foods Pvt. Ltd.',
-    industry: businessProfile.industry && (RECOGNIZED_SECTORS as readonly string[]).includes(businessProfile.industry)
+  // Initialize form data with typed numeric fields for precise validation and quick assessment pre-fill
+  const [formData, setFormData] = useState(() => {
+    let prefill: { projectType?: string; location?: string; industry?: string } = {};
+    try {
+      const stored = sessionStorage.getItem('nitipath_quick_assessment');
+      if (stored) {
+        prefill = JSON.parse(stored);
+      }
+    } catch (e) {}
+
+    const searchParams = new URLSearchParams(window.location.search);
+    const qProjectType = searchParams.get('projectType') || prefill.projectType;
+    const qLocation = searchParams.get('location') || prefill.location;
+    const qIndustry = searchParams.get('industry') || prefill.industry;
+
+    const initialIndustry = qIndustry && (RECOGNIZED_SECTORS as readonly string[]).includes(qIndustry)
+      ? qIndustry
+      : businessProfile.industry && (RECOGNIZED_SECTORS as readonly string[]).includes(businessProfile.industry)
       ? businessProfile.industry
-      : RECOGNIZED_SECTORS[0],
-    location: businessProfile.location && (RECOGNIZED_DISTRICTS as readonly string[]).includes(businessProfile.location)
+      : RECOGNIZED_SECTORS[0];
+
+    const initialLocation = qLocation && (RECOGNIZED_DISTRICTS as readonly string[]).includes(qLocation)
+      ? qLocation
+      : businessProfile.location && (RECOGNIZED_DISTRICTS as readonly string[]).includes(businessProfile.location)
       ? businessProfile.location
-      : RECOGNIZED_DISTRICTS[0],
-    projectType: businessProfile.projectType || 'New Manufacturing Unit',
-    investmentAmountCr: parseFloat(businessProfile.investment?.replace(/[^0-9.]/g, '') || '12.5') || 12.5,
-    landAcres: parseFloat(businessProfile.land?.replace(/[^0-9.]/g, '') || '4.5') || 4.5,
-    employees: businessProfile.employees || 45,
+      : RECOGNIZED_DISTRICTS[0];
+
+    const initialProjectType = qProjectType || businessProfile.projectType || 'New Manufacturing Unit';
+
+    return {
+      companyName: businessProfile.companyName || 'Raipur Fresh Foods Pvt. Ltd.',
+      industry: initialIndustry,
+      location: initialLocation,
+      projectType: initialProjectType,
+      investmentAmountCr: parseFloat(businessProfile.investment?.replace(/[^0-9.]/g, '') || '12.5') || 12.5,
+      landAcres: parseFloat(businessProfile.land?.replace(/[^0-9.]/g, '') || '4.5') || 4.5,
+      employees: businessProfile.employees || 45,
+    };
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -372,9 +398,9 @@ export const AssessmentPage: React.FC = () => {
                   onChange={(e) => handleInputChange('projectType', e.target.value)}
                   className={`w-full px-3.5 py-2.5 bg-slate-50 border ${errors.projectType ? 'border-red-500 focus:ring-red-400' : 'border-slate-300 focus:ring-govNavy-500'} rounded-lg text-xs font-medium focus:outline-none focus:ring-2`}
                 >
-                  <option value="New Manufacturing Unit">New Manufacturing Unit (Greenfield)</option>
-                  <option value="Expansion of Existing Plant">Expansion of Existing Plant (Brownfield)</option>
-                  <option value="Diversification / Product Line Add">Diversification / Product Line Addition</option>
+                  {PROJECT_TYPES.map(pt => (
+                    <option key={pt.value} value={pt.value}>{pt.label}</option>
+                  ))}
                 </select>
                 {errors.projectType && (
                   <p className="text-red-600 text-xs font-semibold mt-1 flex items-center gap-1">

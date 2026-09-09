@@ -18,7 +18,8 @@ export const RegisterPage: React.FC = () => {
     e.preventDefault();
     login(email || 'business@company.com', 'business');
     showToast("Business account registered! Proceeding to business assessment onboarding.");
-    navigate('/assessment');
+    const search = window.location.search;
+    navigate(`/assessment${search}`);
   };
 
   return (

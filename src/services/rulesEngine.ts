@@ -27,6 +27,14 @@ export const RECOGNIZED_DISTRICTS = [
 
 export type RecognizedDistrict = typeof RECOGNIZED_DISTRICTS[number];
 
+export const PROJECT_TYPES = [
+  { value: 'New Manufacturing Unit', label: 'New Manufacturing Unit (Greenfield)' },
+  { value: 'Expansion of Existing Plant', label: 'Expansion of Existing Plant (Brownfield)' },
+  { value: 'Diversification / Product Line Add', label: 'Diversification / Product Line Addition' },
+] as const;
+
+export type ProjectTypeValue = typeof PROJECT_TYPES[number]['value'];
+
 export interface DocSpec {
   name: string;
   issuingAuthority: string;
