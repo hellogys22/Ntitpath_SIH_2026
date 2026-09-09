@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   Compass, 
@@ -25,7 +25,14 @@ import {
   Check,
   ChevronDown
 } from 'lucide-react';
-import { motion } from 'motion/react';
+import { 
+  motion, 
+  useScroll, 
+  useSpring, 
+  useTransform, 
+  useMotionValue, 
+  useMotionTemplate 
+} from 'motion/react';
 import { useApp } from '../../context/AppContext';
 import { 
   RECOGNIZED_SECTORS, 
@@ -324,6 +331,47 @@ export const LandingPage: React.FC = () => {
   const [pageLang, setPageLang] = useState<'EN' | 'HI'>('EN');
   const t = translations[pageLang];
 
+  // 1. Scroll-driven animations
+  const { scrollYProgress, scrollY } = useScroll();
+  const scrollProgressScale = useSpring(scrollYProgress, {
+    stiffness: 120,
+    damping: 30,
+    restDelta: 0.001
+  });
+
+  // Hero parallax on scroll
+  const heroImageScrollY = useTransform(scrollY, [0, 600], [0, 90]);
+  const heroTextScrollY = useTransform(scrollY, [0, 500], [0, -35]);
+
+  // 2. Mouse cursor tracking & motion (zero React state re-renders)
+  const mouseX = useMotionValue(-1000);
+  const mouseY = useMotionValue(-1000);
+  const smoothMouseX = useSpring(mouseX, { stiffness: 220, damping: 26 });
+  const smoothMouseY = useSpring(mouseY, { stiffness: 220, damping: 26 });
+
+  // Mouse tilt / parallax on floating card in hero
+  const cardTiltRotateX = useTransform(smoothMouseY, [0, 1080], [3, -3]);
+  const cardTiltRotateY = useTransform(smoothMouseX, [0, 1920], [-3, 3]);
+  const cardParallaxX = useTransform(smoothMouseX, [0, 1920], [8, -8]);
+  const cardParallaxY = useTransform(smoothMouseY, [0, 1080], [6, -6]);
+
+  // Ambient flare mouse parallax
+  const flareParallaxX = useTransform(smoothMouseX, [0, 1920], [-25, 25]);
+  const flareParallaxY = useTransform(smoothMouseY, [0, 1080], [-25, 25]);
+
+  // Interactive dynamic cursor spotlight
+  const spotlightBackground = useMotionTemplate`radial-gradient(650px circle at ${smoothMouseX}px ${smoothMouseY}px, rgba(255, 107, 0, 0.065), transparent 80%)`;
+  const subtleBlueGlow = useMotionTemplate`radial-gradient(400px circle at ${smoothMouseX}px ${smoothMouseY}px, rgba(59, 130, 246, 0.04), transparent 75%)`;
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
+    };
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [mouseX, mouseY]);
+
   // Hover state for navbar sliding underline indicator
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
 
@@ -389,7 +437,23 @@ export const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#070D1E] text-slate-100 font-sans selection:bg-orange-500 selection:text-white">
+    <div className="min-h-screen flex flex-col bg-[#070D1E] text-slate-100 font-sans selection:bg-orange-500 selection:text-white relative overflow-x-clip">
+      {/* Sleek Top Scroll Progress Indicator */}
+      <motion.div
+        style={{ scaleX: scrollProgressScale }}
+        className="fixed top-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-[#FF6B00] via-amber-400 to-[#10B981] origin-left z-[70] pointer-events-none"
+      />
+
+      {/* Interactive Mouse Cursor Ambient Spotlight Glow */}
+      <motion.div
+        style={{ background: spotlightBackground }}
+        className="fixed inset-0 pointer-events-none z-20 transition-opacity duration-300"
+      />
+      <motion.div
+        style={{ background: subtleBlueGlow }}
+        className="fixed inset-0 pointer-events-none z-20 transition-opacity duration-300"
+      />
+
       <IntelligenceBanner />
 
       {/* ========================================================================= */}
@@ -644,7 +708,10 @@ export const LandingPage: React.FC = () => {
       <section className="relative min-h-[640px] lg:min-h-[720px] flex items-center overflow-hidden border-b border-slate-800/60">
         
         {/* Background Industrial Highway & Refinery Photography on the Right */}
-        <div className="absolute right-0 top-0 bottom-0 w-full lg:w-[62%] pointer-events-none select-none overflow-hidden z-0">
+        <motion.div 
+          style={{ y: heroImageScrollY }}
+          className="absolute right-0 top-0 bottom-0 w-full lg:w-[62%] pointer-events-none select-none overflow-hidden z-0"
+        >
           <motion.img 
             src={heroImage} 
             alt="Industrial and infrastructure highway landscape at sunset"
@@ -657,16 +724,22 @@ export const LandingPage: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-[#070D1E] via-[#070D1E]/80 to-transparent hidden lg:block" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#070D1E] via-transparent to-[#070D1E]/40" />
           <div className="absolute inset-0 bg-[#070D1E]/60 lg:hidden" />
-          {/* Subtle warm amber ambient flare */}
-          <div className="absolute bottom-10 right-10 w-72 h-72 rounded-full bg-amber-500/10 blur-3xl pointer-events-none" />
-        </div>
+          {/* Subtle warm amber ambient flare responding to mouse motion */}
+          <motion.div 
+            style={{ x: flareParallaxX, y: flareParallaxY }}
+            className="absolute bottom-10 right-10 w-72 h-72 rounded-full bg-amber-500/10 blur-3xl pointer-events-none" 
+          />
+        </motion.div>
 
         {/* Content Container */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24 relative z-10 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             
-            {/* Left Column: Hero Copy, CTAs, Decorative Badges */}
-            <div className="lg:col-span-7 xl:col-span-7 space-y-6">
+            {/* Left Column: Hero Copy, CTAs, Decorative Badges with subtle scroll parallax */}
+            <motion.div 
+              style={{ y: heroTextScrollY }}
+              className="lg:col-span-7 xl:col-span-7 space-y-6"
+            >
               
               {/* Small Pill Badge */}
               <motion.div
@@ -780,16 +853,23 @@ export const LandingPage: React.FC = () => {
                 </div>
               </motion.div>
 
-            </div>
+            </motion.div>
 
             {/* ========================================================================= */}
             {/* FLOATING QUICK-ASSESSMENT CARD: Overlapping Hero with 3 Real Dropdowns */}
             {/* ========================================================================= */}
             <motion.div
+              style={{
+                x: cardParallaxX,
+                y: cardParallaxY,
+                rotateX: cardTiltRotateX,
+                rotateY: cardTiltRotateY,
+                transformPerspective: 1000,
+              }}
               initial={{ opacity: 0, x: 24 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.35, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
-              className="lg:col-span-5 xl:col-span-5 relative"
+              className="lg:col-span-5 xl:col-span-5 relative will-change-transform"
             >
               <div className="bg-[#0B132B]/95 backdrop-blur-md rounded-2xl p-6 sm:p-7 border border-slate-700/80 shadow-2xl shadow-black/60 relative z-20">
                 
@@ -932,8 +1012,14 @@ export const LandingPage: React.FC = () => {
       {/* ========================================================================= */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
         
-        {/* Section Header */}
-        <div className="text-center mb-14">
+        {/* Section Header with scroll reveal */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.35, ease: 'easeOut' }}
+          className="text-center mb-14"
+        >
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-orange-400 text-[11px] font-extrabold uppercase tracking-widest mb-3">
             <span>{t.whatNitipathDoes.badge}</span>
           </div>
@@ -949,7 +1035,7 @@ export const LandingPage: React.FC = () => {
           <p className="text-xs sm:text-sm text-slate-400 max-w-2xl mx-auto mt-2 leading-relaxed">
             {t.whatNitipathDoes.description}
           </p>
-        </div>
+        </motion.div>
 
         {/* 4 Pillar Cards in a Row (Stack on Mobile, 4 Cols on Desktop) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -999,13 +1085,19 @@ export const LandingPage: React.FC = () => {
         {/* ========================================================================= */}
         {/* FOOTER ACCENT: "BUILD TODAY. GROW TOMORROW." with Horizontal Rule Lines */}
         {/* ========================================================================= */}
-        <div className="mt-16 pt-4 flex items-center justify-center gap-4 sm:gap-6">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.96 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.35, ease: 'easeOut' }}
+          className="mt-16 pt-4 flex items-center justify-center gap-4 sm:gap-6"
+        >
           <div className="h-px bg-gradient-to-r from-transparent via-slate-700 to-slate-700 flex-1 max-w-xs sm:max-w-sm" />
           <span className="text-[11px] sm:text-xs font-black tracking-[0.25em] text-slate-400 uppercase text-center shrink-0">
             {t.whatNitipathDoes.footerAccent}
           </span>
           <div className="h-px bg-gradient-to-l from-transparent via-slate-700 to-slate-700 flex-1 max-w-xs sm:max-w-sm" />
-        </div>
+        </motion.div>
 
       </section>
 
@@ -1014,7 +1106,13 @@ export const LandingPage: React.FC = () => {
       {/* ========================================================================= */}
       <section id="how-it-works" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full border-t border-slate-800/80">
         
-        <div className="text-center mb-14">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.35, ease: 'easeOut' }}
+          className="text-center mb-14"
+        >
           <span className="text-[11px] font-extrabold uppercase tracking-widest text-slate-400 bg-slate-800 px-3 py-1 rounded-full border border-slate-700">
             {t.howItWorks.badge}
           </span>
@@ -1024,7 +1122,7 @@ export const LandingPage: React.FC = () => {
           <p className="text-xs sm:text-sm text-slate-400 mt-2">
             {t.howItWorks.subtitle}
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           
@@ -1082,16 +1180,28 @@ export const LandingPage: React.FC = () => {
       <section className="py-16 bg-[#0B132B]/40 border-y border-slate-800/80">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          <div className="text-center mb-10">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
+            className="text-center mb-10"
+          >
             <h2 className="text-2xl font-black text-white">
               {t.comparison.heading}
             </h2>
             <p className="text-xs sm:text-sm text-slate-400 mt-2">
               {t.comparison.subtitle}
             </p>
-          </div>
+          </motion.div>
 
-          <div className="bg-[#0B132B] rounded-2xl border border-slate-800 shadow-xl overflow-hidden">
+          <motion.div 
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
+            className="bg-[#0B132B] rounded-2xl border border-slate-800 shadow-xl overflow-hidden"
+          >
             <div className="grid grid-cols-12 bg-slate-900 text-white text-xs font-bold p-4 border-b border-slate-800">
               <div className="col-span-5 text-slate-400 uppercase tracking-wider font-extrabold">
                 {t.comparison.traditional}
@@ -1104,7 +1214,14 @@ export const LandingPage: React.FC = () => {
 
             <div className="divide-y divide-slate-800/60 text-xs">
               {t.comparison.rows.map((row, index) => (
-                <div key={index} className="grid grid-cols-12 p-4 items-center hover:bg-slate-900/50 transition-colors">
+                <motion.div 
+                  key={index} 
+                  initial={{ opacity: 0, x: -8 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.25, delay: index * 0.04, ease: 'easeOut' }}
+                  className="grid grid-cols-12 p-4 items-center hover:bg-slate-900/50 transition-colors"
+                >
                   <div className="col-span-5 text-slate-400 font-medium">
                     {row.trad}
                   </div>
@@ -1112,10 +1229,10 @@ export const LandingPage: React.FC = () => {
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                     <span>{row.niti}</span>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
         </div>
       </section>
@@ -1123,8 +1240,17 @@ export const LandingPage: React.FC = () => {
       {/* ========================================================================= */}
       {/* Final Call to Action */}
       {/* ========================================================================= */}
-      <section className="bg-gradient-to-b from-[#070D1E] to-[#040711] text-white py-16 px-4 sm:px-6 lg:px-8 border-t border-slate-800 text-center">
-        <div className="max-w-3xl mx-auto space-y-6">
+      <section className="bg-gradient-to-b from-[#070D1E] to-[#040711] text-white py-16 px-4 sm:px-6 lg:px-8 border-t border-slate-800 text-center relative overflow-hidden">
+        {/* Subtle ambient orange glow responding to scroll */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-orange-500/5 blur-3xl pointer-events-none" />
+
+        <motion.div 
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.35, ease: 'easeOut' }}
+          className="max-w-3xl mx-auto space-y-6 relative z-10"
+        >
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white">
             {t.finalCta.heading}
           </h2>
@@ -1132,36 +1258,48 @@ export const LandingPage: React.FC = () => {
             {t.finalCta.desc}
           </p>
 
-          <div className="pt-2 flex flex-wrap items-center justify-center gap-4">
-            <button
+          <motion.div 
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{ duration: 0.3, delay: 0.12, ease: 'easeOut' }}
+            className="pt-2 flex flex-wrap items-center justify-center gap-4"
+          >
+            <motion.button
+              whileHover={{ y: -2, scale: 1.02 }}
+              whileTap={{ y: 0, scale: 0.98 }}
               type="button"
               onClick={handleStartAssessment}
-              className="px-8 py-3.5 bg-[#FF6B00] hover:bg-[#E65F00] text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-orange-500/25 transition-all flex items-center gap-2 cursor-pointer"
+              className="px-8 py-3.5 bg-[#FF6B00] hover:bg-[#E65F00] text-white font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-orange-500/25 hover:shadow-orange-500/35 transition-all flex items-center gap-2 cursor-pointer active:scale-98"
             >
               <span>{t.finalCta.button}</span>
               <ArrowRight className="w-4 h-4" />
-            </button>
+            </motion.button>
 
-            <button
+            <motion.button
+              whileHover={{ y: -2, scale: 1.02 }}
+              whileTap={{ y: 0, scale: 0.98 }}
               type="button"
               onClick={() => {
                 enterDemoMode();
                 navigate('/dashboard');
               }}
-              className="px-6 py-3.5 bg-slate-800/80 hover:bg-slate-800 text-amber-300 hover:text-amber-200 font-bold text-xs rounded-xl border border-amber-500/40 hover:border-amber-400 transition-all flex items-center gap-2 cursor-pointer"
+              className="px-6 py-3.5 bg-slate-800/80 hover:bg-slate-800 text-amber-300 hover:text-amber-200 font-bold text-xs rounded-xl border border-amber-500/40 hover:border-amber-400 transition-all flex items-center gap-2 cursor-pointer shadow-xs"
             >
               <Eye className="w-4 h-4 text-amber-400" />
               <span>{t.finalCta.demo}</span>
-            </button>
+            </motion.button>
 
-            <Link
-              to="/login"
-              className="px-6 py-3.5 bg-slate-900 hover:bg-slate-850 text-slate-200 hover:text-white font-bold text-xs rounded-xl border border-slate-700 transition-colors"
-            >
-              {t.finalCta.signIn}
-            </Link>
-          </div>
-        </div>
+            <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
+              <Link
+                to="/login"
+                className="px-6 py-3.5 bg-slate-900 hover:bg-slate-850 text-slate-200 hover:text-white font-bold text-xs rounded-xl border border-slate-700 transition-colors inline-block"
+              >
+                {t.finalCta.signIn}
+              </Link>
+            </motion.div>
+          </motion.div>
+        </motion.div>
       </section>
 
       <Footer />
