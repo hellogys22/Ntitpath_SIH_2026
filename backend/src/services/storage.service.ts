@@ -3,6 +3,8 @@ import fs from 'fs';
 import { Response } from 'express';
 import prisma from '../prisma/client';
 
+import { supabase } from '../config/supabase';
+
 export class StorageService {
   private static bucketName = 'documents';
 
@@ -42,19 +44,24 @@ export class StorageService {
 
     const expiresAt = new Date(Date.now() + expiresInSeconds * 1000).toISOString();
 
-    // Check if Supabase Storage is configured in environment
-    const supabaseUrl = process.env.SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY;
-
-    if (supabaseUrl && supabaseKey) {
-      // Supabase Storage Signed URL generation
+    // If Supabase Storage client is active, generate official Supabase signed URL
+    if (supabase) {
       const storagePath = `${document.application.business.userId}/${document.applicationId}/${document.fileName || documentId}`;
-      const signedUrl = `${supabaseUrl}/storage/v1/object/sign/${this.bucketName}/${storagePath}?token=supabase_token_placeholder&expiresIn=${expiresInSeconds}`;
-      return {
-        signedUrl,
-        expiresAt,
-        fileName: document.fileName || document.name,
-      };
+      try {
+        const { data, error } = await supabase.storage
+          .from(this.bucketName)
+          .createSignedUrl(storagePath, expiresInSeconds);
+
+        if (!error && data?.signedUrl) {
+          return {
+            signedUrl: data.signedUrl,
+            expiresAt,
+            fileName: document.fileName || document.name,
+          };
+        }
+      } catch (err) {
+        console.warn('Supabase storage signed URL generation fallback to local stream:', err);
+      }
     }
 
     // Default Local Private Gated Storage: Routed through authenticated API download endpoint
