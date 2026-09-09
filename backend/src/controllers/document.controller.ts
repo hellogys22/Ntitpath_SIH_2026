@@ -1,6 +1,7 @@
 import { Response, NextFunction } from 'express';
 import { AuthenticatedRequest } from '../types';
 import { DocumentService } from '../services/document.service';
+import { StorageService } from '../services/storage.service';
 
 export class DocumentController {
   static async uploadDocument(req: AuthenticatedRequest, res: Response, next: NextFunction) {
@@ -40,10 +41,47 @@ export class DocumentController {
   static async getDocuments(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
       const { applicationId } = req.params;
-      const documents = await DocumentService.getDocumentsByApplication(applicationId);
+      const documents = await DocumentService.getDocumentsByApplication(
+        applicationId,
+        req.user?.id,
+        req.user?.role
+      );
       res.status(200).json({
         success: true,
         data: documents,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async downloadDocument(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      await StorageService.streamPrivateFile({
+        documentId: id,
+        requestingUserId: req.user!.id,
+        requestingUserRole: req.user!.role,
+        res,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async getSignedUrl(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const expiresIn = req.query.expiresIn ? parseInt(req.query.expiresIn as string, 10) : 900;
+      const result = await StorageService.generateSignedUrl({
+        documentId: id,
+        requestingUserId: req.user!.id,
+        requestingUserRole: req.user!.role,
+        expiresInSeconds: expiresIn,
+      });
+      res.status(200).json({
+        success: true,
+        data: result,
       });
     } catch (error) {
       next(error);

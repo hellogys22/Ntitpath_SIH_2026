@@ -31,8 +31,8 @@ app.use(
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Static uploads serving
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+// Note: Confidential uploads are private and accessible only via RLS-scoped /api/documents/:id/download or signed URLs.
+// Public static directory disabled for security hardening.
 
 // Swagger API Documentation
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {

@@ -140,6 +140,46 @@ export class AuthService {
     return user;
   }
 
+  static async resetDemoData() {
+    const demoApp = await prisma.application.findFirst({
+      where: { applicationNumber: 'NTP-00128' },
+    });
+    if (demoApp) {
+      await prisma.application.update({
+        where: { id: demoApp.id },
+        data: {
+          status: 'IN_PROGRESS',
+          readinessScore: 72,
+          riskLevel: 'HIGH',
+        },
+      });
+
+      await prisma.document.updateMany({
+        where: { applicationId: demoApp.id, docType: 'SITE_PLAN' },
+        data: {
+          status: 'MISMATCH_DETECTED',
+          mismatchDetailsJson: JSON.stringify({
+            field: 'Total Plant Constructed Area',
+            buildingPlanValue: '10,000 sq ft',
+            projectDocValue: '12,500 sq ft',
+            impactDescription: 'The Pollution Control Board requires exact constructed footprint matching Effluent Treatment Capacity calculations.',
+            severity: 'HIGH',
+          }),
+        },
+      });
+
+      await prisma.approval.updateMany({
+        where: { applicationId: demoApp.id, approvalCode: 'APPR_POLLUTION_CTE' },
+        data: {
+          status: 'UNDER_REVIEW',
+          queryComment: 'Area discrepancy between site layout and DPR requires rectification.',
+        },
+      });
+    }
+
+    return { message: 'Demo data sandbox reset to initial state' };
+  }
+
   private static generateToken(payload: AuthUserPayload): string {
     return jwt.sign(payload, ENV.JWT_SECRET, {
       expiresIn: ENV.JWT_EXPIRES_IN as any,

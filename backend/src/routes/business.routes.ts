@@ -3,10 +3,12 @@ import { BusinessController } from '../controllers/business.controller';
 import { authenticateJwt } from '../middleware/auth.middleware';
 import { validateRequest } from '../middleware/validate.middleware';
 import { createBusinessSchema, updateBusinessSchema } from '../validators/business.validator';
+import { enforceDemoIsolation } from '../middleware/demoIsolation.middleware';
 
 const router = Router();
 
 router.use(authenticateJwt);
+router.use(enforceDemoIsolation);
 
 router.post('/', validateRequest(createBusinessSchema), BusinessController.createBusiness);
 router.get('/profile', BusinessController.getProfile);

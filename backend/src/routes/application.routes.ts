@@ -3,10 +3,12 @@ import { ApplicationController } from '../controllers/application.controller';
 import { authenticateJwt } from '../middleware/auth.middleware';
 import { validateRequest } from '../middleware/validate.middleware';
 import { createApplicationSchema } from '../validators/application.validator';
+import { enforceDemoIsolation } from '../middleware/demoIsolation.middleware';
 
 const router = Router();
 
 router.use(authenticateJwt);
+router.use(enforceDemoIsolation);
 
 router.get('/', ApplicationController.getApplications);
 router.post('/', validateRequest(createApplicationSchema), ApplicationController.createApplication);

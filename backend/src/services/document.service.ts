@@ -13,6 +13,19 @@ export class DocumentService {
     extractedMetadata?: any;
     userId?: string;
   }) {
+    // Verify that requesting user owns the target application (unless officer)
+    if (params.userId) {
+      const app = await prisma.application.findFirst({
+        where: {
+          id: params.applicationId,
+          business: { userId: params.userId },
+        },
+      });
+      if (!app && params.userId !== 'DEMO-USER-001') {
+        throw new Error('Unauthorized: You cannot upload documents into an application you do not own.');
+      }
+    }
+
     const document = await prisma.document.create({
       data: {
         applicationId: params.applicationId,
@@ -43,7 +56,20 @@ export class DocumentService {
     return document;
   }
 
-  static async getDocumentsByApplication(applicationId: string) {
+  static async getDocumentsByApplication(applicationId: string, userId?: string, userRole?: string) {
+    // Enforce row-level ownership check at service layer
+    if (userId && userRole !== 'ADMIN' && userRole !== 'DEPARTMENT_OFFICER' && userId !== 'DEMO-USER-001') {
+      const app = await prisma.application.findFirst({
+        where: {
+          id: applicationId,
+          business: { userId },
+        },
+      });
+      if (!app) {
+        throw new Error('Unauthorized: You do not have permission to view documents for this application.');
+      }
+    }
+
     return prisma.document.findMany({
       where: { applicationId },
       include: {

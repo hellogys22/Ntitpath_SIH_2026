@@ -44,4 +44,16 @@ export class AuthController {
       next(error);
     }
   }
+
+  static async demoReset(_req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await AuthService.resetDemoData();
+      res.status(200).json({
+        success: true,
+        data: result,
+      });
+    } catch (error: any) {
+      next(error);
+    }
+  }
 }
