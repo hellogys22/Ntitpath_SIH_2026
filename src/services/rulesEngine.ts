@@ -30,7 +30,7 @@ export type RecognizedDistrict = typeof RECOGNIZED_DISTRICTS[number];
 export interface DocSpec {
   name: string;
   issuingAuthority: string;
-  acquisitionDifficulty: 'Easy' | 'Moderate' | 'High';
+  acquisitionDifficulty: 'Easy' | 'Moderate' | 'Difficult' | 'High';
   mandatory?: boolean;
 }
 
@@ -127,8 +127,8 @@ export const MASTER_RULES: SectorRule[] = [
     whyItMatters: 'Mandatory constitutional clearance for scheduled tribal areas under PESA Act 1996 and CG Tenancy Code (Sec 170-B).',
     description: 'Gram Sabha public consultation, consent resolution, and Tribal Advisory Council endorsement.',
     requiredDocuments: [
-      { name: 'PESA Gram Sabha Resolution & Consent Certificate', issuingAuthority: 'Gram Panchayat & Block Development Office', acquisitionDifficulty: 'High', mandatory: true },
-      { name: 'Tribal Land Tenancy Act (Sec 170-B) Clearance', issuingAuthority: 'Sub-Divisional Magistrate (SDM) Tribal Welfare', acquisitionDifficulty: 'High', mandatory: true },
+      { name: 'PESA Gram Sabha Resolution & Consent Certificate', issuingAuthority: 'Gram Panchayat & Block Development Office', acquisitionDifficulty: 'Difficult', mandatory: true },
+      { name: 'Tribal Land Tenancy Act (Sec 170-B) Clearance', issuingAuthority: 'Sub-Divisional Magistrate (SDM) Tribal Welfare', acquisitionDifficulty: 'Difficult', mandatory: true },
       { name: 'Socio-Economic Tribal Community Benefit Plan', issuingAuthority: 'Enterprise CSR Cell', acquisitionDifficulty: 'Moderate', mandatory: true },
     ],
     condition: (p) => p.location.toLowerCase().includes('bastar') || p.location.toLowerCase().includes('jagdalpur'),
@@ -148,7 +148,7 @@ export const MASTER_RULES: SectorRule[] = [
     whyItMatters: 'Statutory mandate under Air & Water Acts prior to initiating any site construction or foundation work.',
     description: 'Evaluates effluent treatment plant (ETP), stack heights, air scrubbing, and zero liquid discharge.',
     requiredDocuments: [
-      { name: 'Environmental Management Plan (EMP)', issuingAuthority: 'NABET / QCI Accredited Environmental Consultant', acquisitionDifficulty: 'High', mandatory: true },
+      { name: 'Environmental Management Plan (EMP)', issuingAuthority: 'NABET / QCI Accredited Environmental Consultant', acquisitionDifficulty: 'Difficult', mandatory: true },
       { name: 'ETP/STP Process Flow Diagram & Sizing Specs', issuingAuthority: 'Environmental Engineering Agency', acquisitionDifficulty: 'Moderate', mandatory: true },
       { name: 'Detailed Project Report (DPR)', issuingAuthority: 'Chartered Industrial Consultant', acquisitionDifficulty: 'Moderate', mandatory: true },
       { name: 'Site Layout with Emissions Stack Details', issuingAuthority: 'Empanelled Industrial Architect', acquisitionDifficulty: 'Moderate', mandatory: true },
@@ -187,7 +187,7 @@ export const MASTER_RULES: SectorRule[] = [
     description: 'Sanctions constructed footprint area, FAR utilization, and structural load certificates.',
     requiredDocuments: [
       { name: 'Architectural Layout & Elevation Drawings (CAD)', issuingAuthority: 'Licensed Architect', acquisitionDifficulty: 'Moderate', mandatory: true },
-      { name: 'Structural Stability Certificate (Vetted Engineer)', issuingAuthority: 'NIT / Govt Engineering College / Chartered Structural Engineer', acquisitionDifficulty: 'High', mandatory: true },
+      { name: 'Structural Stability Certificate (Vetted Engineer)', issuingAuthority: 'NIT / Govt Engineering College / Chartered Structural Engineer', acquisitionDifficulty: 'Difficult', mandatory: true },
       { name: 'Soil Testing & Safe Bearing Capacity Report', issuingAuthority: 'NABL Accredited Geotechnical Laboratory', acquisitionDifficulty: 'Moderate', mandatory: true },
     ],
   },
@@ -241,9 +241,9 @@ export const MASTER_RULES: SectorRule[] = [
     whyItMatters: 'Statutory mandate under EIA Notification 2006 for medium and large manufacturing units (> ₹10 Cr).',
     description: 'Environmental baseline data scrutiny, public consultation evaluation, and environmental clearance grant.',
     requiredDocuments: [
-      { name: 'EIA Baseline Monitoring Report', issuingAuthority: 'MoEFCC / QCI Accredited Environmental Lab', acquisitionDifficulty: 'High', mandatory: true },
-      { name: 'Terms of Reference (ToR) Compliance Matrix', issuingAuthority: 'Accredited Environmental Consultant', acquisitionDifficulty: 'High', mandatory: true },
-      { name: 'Public Hearing Minutes & Redressal Plan', issuingAuthority: 'State Pollution Control Board & District Collector', acquisitionDifficulty: 'High', mandatory: true },
+      { name: 'EIA Baseline Monitoring Report', issuingAuthority: 'MoEFCC / QCI Accredited Environmental Lab', acquisitionDifficulty: 'Difficult', mandatory: true },
+      { name: 'Terms of Reference (ToR) Compliance Matrix', issuingAuthority: 'Accredited Environmental Consultant', acquisitionDifficulty: 'Difficult', mandatory: true },
+      { name: 'Public Hearing Minutes & Redressal Plan', issuingAuthority: 'State Pollution Control Board & District Collector', acquisitionDifficulty: 'Difficult', mandatory: true },
     ],
     condition: (p) => p.investmentCr > 10,
   },
@@ -261,7 +261,7 @@ export const MASTER_RULES: SectorRule[] = [
     whyItMatters: 'Apex cabinet approval granting fast-track statutory exemptions and customized mega fiscal incentives (> ₹50 Cr).',
     description: 'Inter-ministerial evaluation, anchor investment status grant, and customized state package MOU execution.',
     requiredDocuments: [
-      { name: 'Mega Project Comprehensive Investment Dossier', issuingAuthority: 'Enterprise Board of Directors', acquisitionDifficulty: 'High', mandatory: true },
+      { name: 'Mega Project Comprehensive Investment Dossier', issuingAuthority: 'Enterprise Board of Directors', acquisitionDifficulty: 'Difficult', mandatory: true },
       { name: 'Anchor Industry Employment Guarantee Undertaking', issuingAuthority: 'Company Legal Counsel', acquisitionDifficulty: 'Moderate', mandatory: true },
       { name: 'State Incentive Package Application (Form MI-1)', issuingAuthority: 'Directorate of Industries Raipur', acquisitionDifficulty: 'Moderate', mandatory: true },
     ],
@@ -301,8 +301,8 @@ export const MASTER_RULES: SectorRule[] = [
     whyItMatters: 'Compulsory conservation clearance for industrial estates exceeding 10 acres to protect aquifers.',
     description: 'Regional aquifer pump test validation, river intake feasibility, and piezometer installation directive.',
     requiredDocuments: [
-      { name: 'Comprehensive Hydrological Impact Study', issuingAuthority: 'Central Ground Water Board Empanelled Consultant', acquisitionDifficulty: 'High', mandatory: true },
-      { name: 'River / Canal Intake Tap Engineering Drawing', issuingAuthority: 'Executive Engineer Water Resources Dept (WRD)', acquisitionDifficulty: 'High', mandatory: true },
+      { name: 'Comprehensive Hydrological Impact Study', issuingAuthority: 'Central Ground Water Board Empanelled Consultant', acquisitionDifficulty: 'Difficult', mandatory: true },
+      { name: 'River / Canal Intake Tap Engineering Drawing', issuingAuthority: 'Executive Engineer Water Resources Dept (WRD)', acquisitionDifficulty: 'Difficult', mandatory: true },
       { name: 'Automated Piezometer & Telemetry System Plan', issuingAuthority: 'Groundwater Sensor Instrumentation Vendor', acquisitionDifficulty: 'Moderate', mandatory: true },
     ],
     condition: (p) => p.landAcres > 10,
@@ -460,7 +460,7 @@ export const MASTER_RULES: SectorRule[] = [
     description: 'In-person inspection of constructed ETP/STP, online continuous emission monitoring (OCEMS) setup.',
     requiredDocuments: [
       { name: 'Pollution CTE Compliance Status Report', issuingAuthority: 'Enterprise Environmental Officer', acquisitionDifficulty: 'Moderate', mandatory: true },
-      { name: 'ETP Commissioning & Performance Testing Report', issuingAuthority: 'NABL Accredited Environmental Testing Lab', acquisitionDifficulty: 'High', mandatory: true },
+      { name: 'ETP Commissioning & Performance Testing Report', issuingAuthority: 'NABL Accredited Environmental Testing Lab', acquisitionDifficulty: 'Difficult', mandatory: true },
       { name: 'Hazardous Waste Storage Area Photographs & Manifest', issuingAuthority: 'Enterprise Waste Management Cell', acquisitionDifficulty: 'Easy', mandatory: true },
       { name: 'Online Monitoring System (OCEMS) Server Link Proof', issuingAuthority: 'CPCB/SPCB Data Portal Integrator', acquisitionDifficulty: 'Moderate', mandatory: true },
     ],
@@ -558,9 +558,9 @@ export const MASTER_RULES: SectorRule[] = [
     whyItMatters: 'Statutory mandate under Drugs and Cosmetics Act 1940 governing pharmaceutical formulating and bulk drug synthesis.',
     description: 'Audit of sterile production suites, cleanroom HVAC air changes, and Schedule M (GMP) compliance.',
     requiredDocuments: [
-      { name: 'WHO-GMP / Schedule M Site Master File (SMF)', issuingAuthority: 'Pharmaceutical Regulatory Affairs Consultant', acquisitionDifficulty: 'High', mandatory: true },
-      { name: 'Cleanroom Validation & HEPA Air Balancing Report', issuingAuthority: 'HVAC Cleanroom Certification Agency (ISO 14644)', acquisitionDifficulty: 'High', mandatory: true },
-      { name: 'Water for Injection (WFI) Loop Qualification Dossier', issuingAuthority: 'Water Purification Validation Engineer', acquisitionDifficulty: 'High', mandatory: true },
+      { name: 'WHO-GMP / Schedule M Site Master File (SMF)', issuingAuthority: 'Pharmaceutical Regulatory Affairs Consultant', acquisitionDifficulty: 'Difficult', mandatory: true },
+      { name: 'Cleanroom Validation & HEPA Air Balancing Report', issuingAuthority: 'HVAC Cleanroom Certification Agency (ISO 14644)', acquisitionDifficulty: 'Difficult', mandatory: true },
+      { name: 'Water for Injection (WFI) Loop Qualification Dossier', issuingAuthority: 'Water Purification Validation Engineer', acquisitionDifficulty: 'Difficult', mandatory: true },
       { name: 'Approved Chemist & Analytical Personnel Registrations', issuingAuthority: 'State Pharmacy Council', acquisitionDifficulty: 'Moderate', mandatory: true },
     ],
     condition: (p) => p.sector.toLowerCase().includes('pharma'),
@@ -580,8 +580,8 @@ export const MASTER_RULES: SectorRule[] = [
     whyItMatters: 'Regulates high-pressure industrial gases (Oxygen, Argon, LPG) and molten metal crane safety in steelworks.',
     description: 'Inspection of gas cylinder manifolds, blast furnace crane tracks, and heavy ladling safety barriers.',
     requiredDocuments: [
-      { name: 'PESO Gas Cylinder Manifold & Storage License', issuingAuthority: 'PESO Regional Circle Office', acquisitionDifficulty: 'High', mandatory: true },
-      { name: 'Blast Furnace & Hot Metal Crane Structural Certificate', issuingAuthority: 'Chartered Metallurgical & Structural Engineer', acquisitionDifficulty: 'High', mandatory: true },
+      { name: 'PESO Gas Cylinder Manifold & Storage License', issuingAuthority: 'PESO Regional Circle Office', acquisitionDifficulty: 'Difficult', mandatory: true },
+      { name: 'Blast Furnace & Hot Metal Crane Structural Certificate', issuingAuthority: 'Chartered Metallurgical & Structural Engineer', acquisitionDifficulty: 'Difficult', mandatory: true },
       { name: 'Scrap & Slag Recycling Protocol Document', issuingAuthority: 'Plant Operations Directorate', acquisitionDifficulty: 'Moderate', mandatory: true },
       { name: 'High-Temperature Heat Stress Worker Safety Scheme', issuingAuthority: 'Industrial Hygiene & Safety Cell', acquisitionDifficulty: 'Moderate', mandatory: true },
     ],
@@ -625,7 +625,7 @@ export const MASTER_RULES: SectorRule[] = [
     description: 'Scrutiny of multi-effect evaporators (MEE), reverse osmosis (RO) reject recovery, and salt crystallization.',
     requiredDocuments: [
       { name: 'Dyeing & Effluent Neutralization Scheme', issuingAuthority: 'Textile Chemical Processing Engineer', acquisitionDifficulty: 'Moderate', mandatory: true },
-      { name: 'Textile Wastewater ZLD Verification Report', issuingAuthority: 'CECB Approved Environmental Auditor', acquisitionDifficulty: 'High', mandatory: true },
+      { name: 'Textile Wastewater ZLD Verification Report', issuingAuthority: 'CECB Approved Environmental Auditor', acquisitionDifficulty: 'Difficult', mandatory: true },
       { name: 'Hazardous Sludge Dewatering & Salt Recovery Protocol', issuingAuthority: 'Waste Management Consultant', acquisitionDifficulty: 'Moderate', mandatory: true },
     ],
     condition: (p) => p.sector.toLowerCase().includes('textil') || p.sector.toLowerCase().includes('apparel'),
@@ -645,8 +645,8 @@ export const MASTER_RULES: SectorRule[] = [
     whyItMatters: 'Governs bulk storage of volatile organic solvents, flammable chemicals, and exothermic reactions.',
     description: 'HAZOP risk analysis, nitrogen blanketing verification, and off-site crisis management link.',
     requiredDocuments: [
-      { name: 'PESO Petroleum / Solvents Storage Sanction', issuingAuthority: 'PESO Regional Circle Office', acquisitionDifficulty: 'High', mandatory: true },
-      { name: 'HAZOP Study & Consequence Analysis Report', issuingAuthority: 'Chartered Chemical Safety Auditor', acquisitionDifficulty: 'High', mandatory: true },
+      { name: 'PESO Petroleum / Solvents Storage Sanction', issuingAuthority: 'PESO Regional Circle Office', acquisitionDifficulty: 'Difficult', mandatory: true },
+      { name: 'HAZOP Study & Consequence Analysis Report', issuingAuthority: 'Chartered Chemical Safety Auditor', acquisitionDifficulty: 'Difficult', mandatory: true },
       { name: 'On-Site Emergency Management Plan (OEMP)', issuingAuthority: 'District Disaster Management Authority (DDMA)', acquisitionDifficulty: 'Moderate', mandatory: true },
     ],
     condition: (p) => p.sector.toLowerCase().includes('chem') || p.sector.toLowerCase().includes('petro'),

@@ -14,6 +14,7 @@ import { ProfilePage } from './pages/business/ProfilePage';
 import { ApprovalsPage } from './pages/business/ApprovalsPage';
 import { ApprovalDetailPage } from './pages/business/ApprovalDetailPage';
 import { DocumentsPage } from './pages/business/DocumentsPage';
+import { OnboardingDocumentsPage } from './pages/business/OnboardingDocumentsPage';
 import { RisksPage } from './pages/business/RisksPage';
 import { SupportPage } from './pages/business/SupportPage';
 import { CompliancePage } from './pages/business/CompliancePage';
@@ -86,6 +87,8 @@ const AppContent: React.FC = () => {
         <Route path="/approvals" element={<BusinessRoute><ApprovalsPage /></BusinessRoute>} />
         <Route path="/approvals/:id" element={<BusinessRoute><ApprovalDetailPage /></BusinessRoute>} />
         <Route path="/documents" element={<BusinessRoute><DocumentsPage /></BusinessRoute>} />
+        <Route path="/onboarding/documents" element={<BusinessRoute><OnboardingDocumentsPage /></BusinessRoute>} />
+        <Route path="/documents-checklist" element={<BusinessRoute><OnboardingDocumentsPage /></BusinessRoute>} />
         <Route path="/risks" element={<BusinessRoute><RisksPage /></BusinessRoute>} />
         <Route path="/support" element={<BusinessRoute><SupportPage /></BusinessRoute>} />
         <Route path="/compliance" element={<BusinessRoute><CompliancePage /></BusinessRoute>} />

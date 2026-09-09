@@ -207,7 +207,7 @@ export const AssessmentPage: React.FC = () => {
       }
 
       showToast(`Intelligence Engine: Generated ${result.approvals.length} clearances & ${result.documents.length} dynamic documents!`);
-      navigate('/dashboard');
+      navigate('/onboarding/documents');
     } catch (err) {
       console.error('Plan generation failed:', err);
       setGlobalError('An unexpected error occurred while compiling statutory clearances. Please check your inputs.');

@@ -62,7 +62,7 @@ export interface DocumentItem {
   fileSize?: string;
   mismatchDetail?: DocumentMismatch;
   issuingAuthority?: string;
-  acquisitionDifficulty?: 'Easy' | 'Moderate' | 'High';
+  acquisitionDifficulty?: 'Easy' | 'Moderate' | 'Difficult' | 'High';
 }
 
 export interface RiskItem {
