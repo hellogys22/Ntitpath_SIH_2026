@@ -35,8 +35,17 @@ interface AppContextType {
   businessProfile: BusinessProfile;
   updateBusinessProfile: (updated: Partial<BusinessProfile>) => void;
   approvals: Approval[];
+  setApprovals: React.Dispatch<React.SetStateAction<Approval[]>>;
   documents: DocumentItem[];
+  setDocuments: React.Dispatch<React.SetStateAction<DocumentItem[]>>;
   risks: RiskItem[];
+  setRisks: React.Dispatch<React.SetStateAction<RiskItem[]>>;
+  applyGeneratedPlan: (plan: {
+    approvals: Approval[];
+    documents: DocumentItem[];
+    risks: RiskItem[];
+    readinessScore?: number;
+  }) => void;
   supportSchemes: SupportScheme[];
   complianceEvents: ComplianceEvent[];
   adminApplications: AdminApplication[];
@@ -133,7 +142,37 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
                 ...prev,
                 readinessScore: intel?.readiness?.readinessScore || liveApp.readinessScore || prev.readinessScore,
               }));
+              if (dash.data.application?.approvals?.length > 0) {
+                const mappedApprovals: Approval[] = dash.data.application.approvals.map((a: any) => ({
+                  id: a.approvalCode || a.id,
+                  name: a.name,
+                  department: a.department,
+                  status: a.status === 'APPROVED' ? 'Completed' : a.status === 'IN_PROGRESS' ? 'In Progress' : a.status === 'BLOCKED' ? 'Blocked' : 'Pending',
+                  risk: a.riskLevel || 'LOW',
+                  dependency: a.dependenciesJson ? JSON.parse(a.dependenciesJson).join(', ') : 'None',
+                  nextAction: a.status === 'IN_PROGRESS' ? 'Submit mandatory clearance attachments' : 'Awaiting prerequisite',
+                  dueStage: `Stage ${a.stage || 1}`,
+                  whyItMatters: a.whyItMatters || 'Statutory clearance required under state industrial policy.',
+                  description: a.description || a.name,
+                  isCriticalPath: a.isCriticalPath ?? true,
+                  canBeParallel: a.canBeParallel ?? false,
+                }));
+                setApprovals(mappedApprovals);
+              }
               if (dash.data.application?.documents?.length > 0) {
+                const mappedDocs: DocumentItem[] = dash.data.application.documents.map((d: any) => ({
+                  id: d.id,
+                  name: d.name,
+                  requirement: 'Required',
+                  status: d.status === 'VERIFIED' ? 'Verified' : d.status === 'MISMATCH_DETECTED' ? 'Needs Correction' : d.status === 'UNDER_REVIEW' ? 'Under Review' : 'Missing',
+                  issue: d.verificationNotes || (d.status === 'MISMATCH_DETECTED' ? 'Discrepancy detected between project records' : undefined),
+                  action: d.status === 'VERIFIED' ? 'Verified and on file' : `Upload ${d.name} to proceed`,
+                  approvalId: d.approvalId || 'APP-001',
+                  approvalName: d.approval?.name || 'Industrial Clearance',
+                  uploadedDate: d.uploadedAt ? new Date(d.uploadedAt).toLocaleDateString() : undefined,
+                  fileSize: d.fileSize ? `${(d.fileSize / (1024 * 1024)).toFixed(1)} MB` : undefined,
+                }));
+                setDocuments(mappedDocs);
                 const hasMismatch = dash.data.application.documents.some((d: any) => d.status === 'MISMATCH_DETECTED');
                 setIsMismatchResolved(!hasMismatch);
               }
@@ -233,6 +272,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       await api.updateProfile(updated);
     } catch (e) {}
     showToast(language === 'HI' ? "प्रोफ़ाइल सफलतापूर्वक अपडेट की गई" : "Business profile updated successfully");
+  };
+
+  const applyGeneratedPlan = (plan: {
+    approvals: Approval[];
+    documents: DocumentItem[];
+    risks: RiskItem[];
+    readinessScore?: number;
+  }) => {
+    setApprovals(plan.approvals);
+    setDocuments(plan.documents);
+    setRisks(plan.risks);
+    if (plan.readinessScore !== undefined) {
+      setBusinessProfile(prev => ({ ...prev, readinessScore: plan.readinessScore! }));
+    }
+    setIsMismatchResolved(false);
   };
 
   const recalculatePlan = async () => {
@@ -414,8 +468,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       businessProfile,
       updateBusinessProfile,
       approvals,
+      setApprovals,
       documents,
+      setDocuments,
       risks,
+      setRisks,
+      applyGeneratedPlan,
       supportSchemes,
       complianceEvents,
       adminApplications,

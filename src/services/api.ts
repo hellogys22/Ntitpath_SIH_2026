@@ -93,6 +93,13 @@ class ApiClient {
     return this.request<ApiResponse<any>>('/applications');
   }
 
+  async createApplication(data: any) {
+    return this.request<ApiResponse<any>>('/applications', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
   async getApplicationById(appId: string) {
     return this.request<ApiResponse<any>>(`/applications/${appId}`);
   }

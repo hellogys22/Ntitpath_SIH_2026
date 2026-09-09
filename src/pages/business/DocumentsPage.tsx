@@ -160,6 +160,11 @@ export const DocumentsPage: React.FC = () => {
                           <FileText className="w-4 h-4 text-slate-400 shrink-0" />
                           <span>{doc.name}</span>
                         </div>
+                        {doc.issuingAuthority && (
+                          <span className="text-[11px] text-slate-500 font-medium block pl-6 mt-0.5">
+                            <span className="text-slate-400">Where to get:</span> {doc.issuingAuthority}
+                          </span>
+                        )}
                         {doc.uploadedDate && (
                           <span className="text-[10px] text-slate-400 font-normal block pl-6">
                             Uploaded {doc.uploadedDate} ({doc.fileSize})
@@ -167,9 +172,28 @@ export const DocumentsPage: React.FC = () => {
                         )}
                       </td>
 
-                      <td className="py-3.5 px-4 text-slate-600 font-medium">{doc.approvalName}</td>
+                      <td className="py-3.5 px-4 text-slate-600 font-medium">
+                        <div>{doc.approvalName}</div>
+                        {doc.acquisitionDifficulty && (
+                          <span className={`inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+                            doc.acquisitionDifficulty === 'Easy' 
+                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
+                              : doc.acquisitionDifficulty === 'Moderate' 
+                              ? 'bg-amber-50 text-amber-700 border-amber-200' 
+                              : 'bg-rose-50 text-rose-700 border-rose-200'
+                          }`}>
+                            {doc.acquisitionDifficulty} Difficulty
+                          </span>
+                        )}
+                      </td>
 
-                      <td className="py-3.5 px-4 text-slate-500 font-semibold">{doc.requirement}</td>
+                      <td className="py-3.5 px-4">
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold ${
+                          doc.requirement === 'Required' ? 'bg-slate-100 text-slate-800' : 'bg-slate-50 text-slate-500'
+                        }`}>
+                          {doc.requirement}
+                        </span>
+                      </td>
 
                       <td className="py-3.5 px-4">
                         <StatusBadge status={doc.status} size="sm" />

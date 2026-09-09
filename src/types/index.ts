@@ -61,6 +61,8 @@ export interface DocumentItem {
   uploadedDate?: string;
   fileSize?: string;
   mismatchDetail?: DocumentMismatch;
+  issuingAuthority?: string;
+  acquisitionDifficulty?: 'Easy' | 'Moderate' | 'High';
 }
 
 export interface RiskItem {

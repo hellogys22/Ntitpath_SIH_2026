@@ -71,9 +71,9 @@ export class PlanService {
       },
     });
 
-    // Create Approval records
+    // Create Approval records and statutory Document checklist records
     for (const rule of applicableRules) {
-      await prisma.approval.create({
+      const approval = await prisma.approval.create({
         data: {
           applicationId: application.id,
           approvalCode: rule.approvalCode,
@@ -90,6 +90,19 @@ export class PlanService {
           dependenciesJson: JSON.stringify(rule.dependencies),
         },
       });
+
+      // Populate document checklist records for this clearance
+      for (const docName of rule.requiredDocuments) {
+        await prisma.document.create({
+          data: {
+            applicationId: application.id,
+            approvalId: approval.id,
+            docType: rule.category.toUpperCase(),
+            name: docName,
+            status: 'NOT_UPLOADED',
+          },
+        });
+      }
     }
 
     // Create default compliance timeline items
@@ -153,6 +166,7 @@ export class PlanService {
       include: {
         business: true,
         approvals: true,
+        documents: true,
         complianceItems: true,
       },
     });
