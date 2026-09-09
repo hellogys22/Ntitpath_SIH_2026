@@ -118,4 +118,18 @@ export class OtpController {
       });
     }
   }
+
+  /**
+   * POST /api/auth/otp/reset-rate-limit
+   * Clears the rate limit map for testing or administrative purposes.
+   */
+  static async resetRateLimit(req: Request, res: Response) {
+    const { email } = req.body || {};
+    OtpService.clearRateLimit(email);
+    res.status(200).json({
+      success: true,
+      message: email ? `Rate limit reset for ${email}` : 'All rate limits reset',
+    });
+  }
 }
+

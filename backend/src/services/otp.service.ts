@@ -63,6 +63,17 @@ export class OtpService {
   }
 
   /**
+   * Clears the rate limiter for a specific email or all emails (dev/test utility).
+   */
+  public static clearRateLimit(email?: string): void {
+    if (email) {
+      this.rateLimitMap.delete(email.trim().toLowerCase());
+    } else {
+      this.rateLimitMap.clear();
+    }
+  }
+
+  /**
    * Records an OTP attempt against the rate limiter.
    */
   private static recordRateLimitAttempt(email: string): void {
@@ -190,6 +201,19 @@ export class OtpService {
           }
         } else {
           throw otpRes.error;
+        }
+      } else if (!devOtp && supabaseAdmin && process.env.NODE_ENV !== 'production') {
+        try {
+          const linkRes = await supabaseAdmin.auth.admin.generateLink({
+            type: 'magiclink',
+            email,
+          });
+          if (linkRes.data?.properties?.email_otp) {
+            devOtp = linkRes.data.properties.email_otp;
+            codeLength = devOtp.length;
+          }
+        } catch (linkErr) {
+          // Keep normal behavior if generateLink throws
         }
       }
     } catch (err: any) {

@@ -17,6 +17,8 @@ router.get('/me', authenticateJwt, AuthController.getMe);
 router.post('/otp/send', OtpController.sendOtp);
 router.post('/otp/verify', OtpController.verifyOtp);
 router.post('/otp/verify-session', OtpController.verifySession);
+router.post('/otp/reset-rate-limit', OtpController.resetRateLimit);
 
 export default router;
+
 
