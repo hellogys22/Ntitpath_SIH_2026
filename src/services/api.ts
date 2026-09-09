@@ -1,5 +1,10 @@
-const API_BASE = (import.meta.env.VITE_API_URL as string)?.replace(/\/+$/, '') || 
-  (typeof window !== 'undefined' ? '/api' : 'http://localhost:5000/api');
+const rawApiUrl = (import.meta.env.VITE_API_URL as string) || '';
+const sanitizedApiUrl = rawApiUrl.includes(':5000') 
+  ? rawApiUrl.replace(':5000', ':5001') 
+  : rawApiUrl;
+
+const API_BASE = sanitizedApiUrl?.replace(/\/+$/, '') || 
+  (typeof window !== 'undefined' ? '/api' : 'http://localhost:5001/api');
 
 export interface ApiResponse<T = any> {
   success: boolean;
