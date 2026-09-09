@@ -12,6 +12,7 @@
 [![Node.js](https://img.shields.io/badge/Backend-Express%20%7C%20Node%2020%20%7C%20TS-339933.svg?style=for-the-badge&logo=node.js)](https://nodejs.org/)
 [![Prisma ORM](https://img.shields.io/badge/ORM-Prisma%205-2D3748.svg?style=for-the-badge&logo=prisma)](https://www.prisma.io/)
 [![Docker](https://img.shields.io/badge/Deploy-Docker%20Compose-2496ED.svg?style=for-the-badge&logo=docker)](https://www.docker.com/)
+[![Vercel](https://img.shields.io/badge/Deploy-Vercel%20Ready-000000.svg?style=for-the-badge&logo=vercel)](https://vercel.com/)
 
 <p align="center">
   <b>Transforming fragmented, opaque industrial clearances into an intelligent, transparent, and accelerated compliance journey for Indian industry.</b>
@@ -234,7 +235,20 @@ stitch_industrial_compliance_intelligence_platform/
 
 ---
 
-### Option 1: Docker Compose (Recommended)
+### Option 1: Deploy to Vercel (Instant Cloud Hosting)
+
+NitiPath is pre-configured for **Vercel** with automatic Single-Page Application (SPA) routing and caching via [`vercel.json`](./vercel.json):
+
+1. Go to [Vercel](https://vercel.com/) and click **"Add New Project"**.
+2. Select your repository: `hellogys22/Ntitpath_SIH_2026`.
+3. Vercel automatically detects the **Vite** preset (`dist` output, `npm run build`).
+4. *(Optional)* Add the environment variable:
+   - `VITE_API_URL`: `https://your-backend-api-domain.com/api` (or omit to use embedded client-side intelligence demonstration mode).
+5. Click **Deploy**.
+
+---
+
+### Option 2: Docker Compose (Local / VPS)
 
 Run the entire full-stack platform with a single command:
 
@@ -248,7 +262,7 @@ docker-compose up --build
 
 ---
 
-### Option 2: Bare Metal Local Development
+### Option 3: Standard Node.js Setup (Bare Metal)
 
 #### 1. Backend Setup
 ```bash

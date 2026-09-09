@@ -1,4 +1,5 @@
-const API_BASE = typeof window !== 'undefined' ? '/api' : 'http://localhost:5000/api';
+const API_BASE = (import.meta.env.VITE_API_URL as string)?.replace(/\/+$/, '') || 
+  (typeof window !== 'undefined' ? '/api' : 'http://localhost:5000/api');
 
 export interface ApiResponse<T = any> {
   success: boolean;
