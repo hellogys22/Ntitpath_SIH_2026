@@ -12,6 +12,7 @@ export interface OtpInputProps {
   devOtp?: string;
   title?: string;
   description?: string;
+  hideAutoFill?: boolean;
 }
 
 export const OtpInput: React.FC<OtpInputProps> = ({
@@ -25,6 +26,7 @@ export const OtpInput: React.FC<OtpInputProps> = ({
   devOtp,
   title = "Verify Email Address",
   description,
+  hideAutoFill = false,
 }) => {
   const [digits, setDigits] = useState<string[]>(Array(length).fill(''));
   const [cooldown, setCooldown] = useState<number>(60);
@@ -154,8 +156,8 @@ export const OtpInput: React.FC<OtpInputProps> = ({
         </p>
       </div>
 
-      {/* Dev helper chip if devOtp is present */}
-      {devOtp && (
+      {/* Dev helper chip if devOtp is present and not hidden */}
+      {!hideAutoFill && devOtp && (
         <div className="flex items-center justify-between p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs">
           <div className="flex items-center gap-1.5 font-mono">
             <span className="font-semibold text-amber-700">Simulated/Dev OTP:</span>

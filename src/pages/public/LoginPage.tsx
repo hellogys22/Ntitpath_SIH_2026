@@ -41,7 +41,6 @@ export const LoginPage: React.FC = () => {
   const [isVerifying, setIsVerifying] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isExpired, setIsExpired] = useState(false);
-  const [devOtp, setDevOtp] = useState<string | undefined>(undefined);
   const [codeLength, setCodeLength] = useState<number>(6);
 
   const refreshCaptcha = () => {
@@ -70,9 +69,6 @@ export const LoginPage: React.FC = () => {
 
     try {
       const res = await api.sendOtp(targetEmail, 'business');
-      if (res?.data?.devOtp) {
-        setDevOtp(res.data.devOtp);
-      }
       if (res?.data?.codeLength) {
         setCodeLength(res.data.codeLength);
       }
@@ -136,9 +132,6 @@ export const LoginPage: React.FC = () => {
     setIsExpired(false);
     try {
       const res = await api.sendOtp(email, 'business');
-      if (res?.data?.devOtp) {
-        setDevOtp(res.data.devOtp);
-      }
       if (res?.data?.codeLength) {
         setCodeLength(res.data.codeLength);
       }
@@ -432,7 +425,7 @@ export const LoginPage: React.FC = () => {
                         isLoading={isVerifying}
                         errorMessage={errorMessage}
                         isExpired={isExpired}
-                        devOtp={devOtp}
+                        hideAutoFill={true}
                         title="Business Sign In Verification"
                         description={`Enter the 6-digit verification code sent to ${email} to sign in to your industrial compliance dashboard.`}
                       />

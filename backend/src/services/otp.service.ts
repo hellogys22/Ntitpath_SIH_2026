@@ -3,6 +3,7 @@ import prisma from '../prisma/client';
 import { supabaseAdmin, supabaseAnon } from '../config/supabase';
 import { ENV } from '../config/env';
 import { AuditService } from './audit.service';
+import { EmailService } from './email.service';
 import { AuthUserPayload } from '../types';
 
 interface SendOtpOptions {
@@ -166,6 +167,7 @@ export class OtpService {
     }
 
     let devOtp: string | undefined;
+    let magicLink: string | undefined;
     let codeLength = 6;
 
     try {
@@ -194,6 +196,7 @@ export class OtpService {
 
             if (linkRes.data?.properties?.email_otp) {
               devOtp = linkRes.data.properties.email_otp;
+              magicLink = linkRes.data.properties.action_link;
               codeLength = devOtp.length;
             }
           } else {
@@ -210,6 +213,7 @@ export class OtpService {
           });
           if (linkRes.data?.properties?.email_otp) {
             devOtp = linkRes.data.properties.email_otp;
+            magicLink = linkRes.data.properties.action_link;
             codeLength = devOtp.length;
           }
         } catch (linkErr) {
@@ -225,6 +229,7 @@ export class OtpService {
         });
         if (linkRes.data?.properties?.email_otp) {
           devOtp = linkRes.data.properties.email_otp;
+          magicLink = linkRes.data.properties.action_link;
           codeLength = devOtp.length;
         } else {
           throw err;
@@ -234,11 +239,30 @@ export class OtpService {
       }
     }
 
+    // Always dispatch real email containing the genuine Supabase OTP to the recipient's inbox
+    let emailSent = false;
+    if (devOtp) {
+      try {
+        const emailRes = await EmailService.sendOtpEmail({
+          to: email,
+          otp: devOtp,
+          type: shouldCreateUser ? 'business' : 'officer',
+          magicLink,
+        });
+        emailSent = emailRes.sent;
+      } catch (e: any) {
+        console.warn(`[OtpService] Email dispatch caught error:`, e.message);
+      }
+    }
+
     return {
       success: true,
-      message: `We sent a ${codeLength}-digit code to ${email}`,
+      message: emailSent
+        ? `Verification code delivered to ${email}. Please check your inbox.`
+        : `We sent a ${codeLength}-digit code to ${email}`,
       devOtp: process.env.NODE_ENV !== 'production' ? devOtp : undefined,
       codeLength,
+      emailSent,
     };
   }
 
