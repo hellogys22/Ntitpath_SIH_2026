@@ -22,8 +22,10 @@ import {
   Menu,
   X,
   LogIn,
-  Check
+  Check,
+  ChevronDown
 } from 'lucide-react';
+import { motion } from 'motion/react';
 import { useApp } from '../../context/AppContext';
 import { 
   RECOGNIZED_SECTORS, 
@@ -322,6 +324,9 @@ export const LandingPage: React.FC = () => {
   const [pageLang, setPageLang] = useState<'EN' | 'HI'>('EN');
   const t = translations[pageLang];
 
+  // Hover state for navbar sliding underline indicator
+  const [hoveredNav, setHoveredNav] = useState<string | null>(null);
+
   // Mobile menu state for Navbar
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -432,46 +437,94 @@ export const LandingPage: React.FC = () => {
               </div>
             </Link>
 
-            {/* Desktop Navigation Links */}
+            {/* Desktop Navigation Links with sliding underline indicator */}
             <div className="hidden lg:flex items-center gap-7 text-xs font-semibold text-slate-300">
-              <Link to="/" className="text-white hover:text-orange-400 transition-colors">
-                {t.nav.home}
-              </Link>
-              <button 
-                onClick={scrollToHowItWorks}
-                className="hover:text-orange-400 transition-colors cursor-pointer bg-transparent border-none p-0 text-xs font-semibold text-slate-300"
-              >
-                {t.nav.howItWorks}
-              </button>
-              <Link 
-                to={user ? '/roadmap' : '/login?redirect=/roadmap'} 
-                className="hover:text-orange-400 transition-colors"
-              >
-                {t.nav.approvals}
-              </Link>
-              <Link to="/support" className="hover:text-orange-400 transition-colors">
-                {t.nav.schemes}
-              </Link>
-              <Link to="/copilot" className="hover:text-orange-400 transition-colors">
-                {t.nav.resources}
-              </Link>
-              <Link to="/support" className="hover:text-orange-400 transition-colors">
-                {t.nav.support}
-              </Link>
+              {[
+                { id: 'home', label: t.nav.home, type: 'link' as const, path: '/' },
+                { id: 'howItWorks', label: t.nav.howItWorks, type: 'button' as const, onClick: scrollToHowItWorks },
+                { id: 'approvals', label: t.nav.approvals, type: 'link' as const, path: user ? '/roadmap' : '/login?redirect=/roadmap' },
+                { id: 'schemes', label: t.nav.schemes, type: 'link' as const, path: '/support' },
+                { id: 'resources', label: t.nav.resources, type: 'link' as const, path: '/copilot' },
+                { id: 'support', label: t.nav.support, type: 'link' as const, path: '/support' },
+              ].map((item) => (
+                <div
+                  key={item.id}
+                  className="relative py-2"
+                  onMouseEnter={() => setHoveredNav(item.id)}
+                  onMouseLeave={() => setHoveredNav(null)}
+                >
+                  {item.type === 'link' ? (
+                    <Link
+                      to={item.path}
+                      className={`transition-colors text-xs font-semibold ${
+                        hoveredNav === item.id ? 'text-white' : 'text-slate-300'
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  ) : (
+                    <button
+                      onClick={item.onClick}
+                      className={`transition-colors text-xs font-semibold bg-transparent border-none p-0 cursor-pointer ${
+                        hoveredNav === item.id ? 'text-white' : 'text-slate-300'
+                      }`}
+                    >
+                      {item.label}
+                    </button>
+                  )}
+                  {hoveredNav === item.id && (
+                    <motion.div
+                      layoutId="navbar-hover-underline"
+                      className="absolute -bottom-0.5 left-0 right-0 h-[2px] bg-gradient-to-r from-orange-500 via-amber-400 to-orange-500 rounded-full"
+                      transition={{ type: 'spring', stiffness: 450, damping: 32 }}
+                    />
+                  )}
+                </div>
+              ))}
             </div>
 
             {/* Right Side: Language Toggle + Auth CTAs */}
             <div className="hidden sm:flex items-center gap-3">
-              {/* Language toggle "EN | हिंदी" */}
-              <button
-                type="button"
-                onClick={togglePageLanguage}
-                className="px-2.5 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 text-slate-200 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-xs"
-                title="Switch Language / भाषा बदलें"
-              >
-                <Globe className="w-3.5 h-3.5 text-orange-400" />
-                <span>{pageLang === 'EN' ? 'EN | हिंदी' : 'हिंदी | EN'}</span>
-              </button>
+              {/* Language toggle with small sliding motion between EN/हिंदी states */}
+              <div className="flex items-center p-0.5 rounded-lg bg-slate-800/80 border border-slate-700/80 text-xs font-bold shadow-xs">
+                <Globe className="w-3.5 h-3.5 text-orange-400 ml-2 mr-1 shrink-0" />
+                <div className="flex items-center relative">
+                  <button
+                    type="button"
+                    onClick={() => setPageLang('EN')}
+                    className={`relative px-2.5 py-1 rounded-md text-[11px] font-bold transition-colors cursor-pointer z-10 ${
+                      pageLang === 'EN' ? 'text-white' : 'text-slate-400 hover:text-slate-200'
+                    }`}
+                    title="English"
+                  >
+                    {pageLang === 'EN' && (
+                      <motion.div
+                        layoutId="lang-active-pill"
+                        className="absolute inset-0 bg-slate-700/95 border border-slate-600/70 rounded-md shadow-xs -z-10"
+                        transition={{ type: 'spring', stiffness: 500, damping: 32 }}
+                      />
+                    )}
+                    <span>EN</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPageLang('HI')}
+                    className={`relative px-2.5 py-1 rounded-md text-[11px] font-bold transition-colors cursor-pointer z-10 ${
+                      pageLang === 'HI' ? 'text-white' : 'text-slate-400 hover:text-slate-200'
+                    }`}
+                    title="हिंदी"
+                  >
+                    {pageLang === 'HI' && (
+                      <motion.div
+                        layoutId="lang-active-pill"
+                        className="absolute inset-0 bg-slate-700/95 border border-slate-600/70 rounded-md shadow-xs -z-10"
+                        transition={{ type: 'spring', stiffness: 500, damping: 32 }}
+                      />
+                    )}
+                    <span>हिंदी</span>
+                  </button>
+                </div>
+              </div>
 
               {user ? (
                 <Link
@@ -592,9 +645,12 @@ export const LandingPage: React.FC = () => {
         
         {/* Background Industrial Highway & Refinery Photography on the Right */}
         <div className="absolute right-0 top-0 bottom-0 w-full lg:w-[62%] pointer-events-none select-none overflow-hidden z-0">
-          <img 
+          <motion.img 
             src={heroImage} 
             alt="Industrial and infrastructure highway landscape at sunset"
+            initial={{ scale: 1.05, opacity: 0.85 }}
+            animate={{ scale: 1.0, opacity: 1 }}
+            transition={{ duration: 1.5, ease: 'easeOut' }}
             className="w-full h-full object-cover object-center lg:object-right filter brightness-95 contrast-105"
           />
           {/* Multi-stage gradient masks to seamlessly blend into deep navy background */}
@@ -613,40 +669,64 @@ export const LandingPage: React.FC = () => {
             <div className="lg:col-span-7 xl:col-span-7 space-y-6">
               
               {/* Small Pill Badge */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-800/90 border border-slate-700/80 text-orange-400 text-xs font-bold shadow-sm backdrop-blur-sm">
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25, delay: 0, ease: 'easeOut' }}
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-800/90 border border-slate-700/80 text-orange-400 text-xs font-bold shadow-sm backdrop-blur-sm"
+              >
                 <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
                 <span>{t.hero.badge}</span>
-              </div>
+              </motion.div>
 
               {/* Main Headline with "Approval" highlighted in Orange */}
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-5.5xl font-black text-white tracking-tight leading-[1.15]">
+              <motion.h1
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.28, delay: 0.08, ease: 'easeOut' }}
+                className="text-3xl sm:text-4xl lg:text-5xl xl:text-5.5xl font-black text-white tracking-tight leading-[1.15]"
+              >
                 {t.hero.headlinePrefix}
                 <span className="text-[#FF6B00] relative inline-block">
                   {t.hero.headlineHighlight}
                   <span className="absolute -bottom-1 inset-x-0 h-1 bg-[#FF6B00]/30 rounded-full" />
                 </span>
                 {t.hero.headlineSuffix}
-              </h1>
+              </motion.h1>
 
               {/* Subheadline */}
-              <p className="text-sm sm:text-base lg:text-lg text-slate-300 font-normal leading-relaxed max-w-2xl">
+              <motion.p
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.28, delay: 0.16, ease: 'easeOut' }}
+                className="text-sm sm:text-base lg:text-lg text-slate-300 font-normal leading-relaxed max-w-2xl"
+              >
                 {t.hero.subheadline}
-              </p>
+              </motion.p>
 
               {/* Action Buttons */}
-              <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.28, delay: 0.24, ease: 'easeOut' }}
+                className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5"
+              >
                 {/* Primary CTA: Start Business Assessment (Orange Filled) */}
-                <button
+                <motion.button
+                  whileHover={{ y: -2, transition: { duration: 0.15 } }}
+                  whileTap={{ y: 0 }}
                   type="button"
                   onClick={handleStartAssessment}
                   className="px-7 py-3.5 bg-[#FF6B00] hover:bg-[#E65F00] text-white font-black text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-orange-500/25 hover:shadow-orange-500/35 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98"
                 >
                   <span>{t.hero.primaryCta}</span>
                   <ArrowRight className="w-4 h-4" />
-                </button>
+                </motion.button>
 
                 {/* Pre-Seeded Instant Demo Access */}
-                <button
+                <motion.button
+                  whileHover={{ y: -2, transition: { duration: 0.15 } }}
+                  whileTap={{ y: 0 }}
                   type="button"
                   onClick={() => {
                     enterDemoMode();
@@ -657,20 +737,27 @@ export const LandingPage: React.FC = () => {
                 >
                   <Eye className="w-4 h-4 text-amber-400" />
                   <span>{t.hero.demoCta}</span>
-                </button>
+                </motion.button>
 
                 {/* Secondary CTA: Explore How It Works (Outline) */}
-                <button
+                <motion.button
+                  whileHover={{ y: -2, transition: { duration: 0.15 } }}
+                  whileTap={{ y: 0 }}
                   type="button"
                   onClick={scrollToHowItWorks}
                   className="px-5 py-3.5 bg-transparent hover:bg-slate-800/60 text-slate-300 hover:text-white border border-slate-700 hover:border-slate-500 font-bold text-xs rounded-xl transition-colors flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <span>{t.hero.secondaryCta}</span>
-                </button>
-              </div>
+                </motion.button>
+              </motion.div>
 
               {/* Three small icon + label items below CTAs */}
-              <div className="pt-4 border-t border-slate-800/60 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-slate-300 font-medium">
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.28, delay: 0.32, ease: 'easeOut' }}
+                className="pt-4 border-t border-slate-800/60 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-slate-300 font-medium"
+              >
                 <div className="flex items-center gap-2">
                   <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
                     <Check className="w-3 h-3" />
@@ -691,14 +778,19 @@ export const LandingPage: React.FC = () => {
                   </div>
                   <span>{t.hero.pillars[2]}</span>
                 </div>
-              </div>
+              </motion.div>
 
             </div>
 
             {/* ========================================================================= */}
             {/* FLOATING QUICK-ASSESSMENT CARD: Overlapping Hero with 3 Real Dropdowns */}
             {/* ========================================================================= */}
-            <div className="lg:col-span-5 xl:col-span-5 relative">
+            <motion.div
+              initial={{ opacity: 0, x: 24 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.35, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              className="lg:col-span-5 xl:col-span-5 relative"
+            >
               <div className="bg-[#0B132B]/95 backdrop-blur-md rounded-2xl p-6 sm:p-7 border border-slate-700/80 shadow-2xl shadow-black/60 relative z-20">
                 
                 {/* Subtle Card Glow Header Accent */}
@@ -726,17 +818,22 @@ export const LandingPage: React.FC = () => {
                     <label className="block text-[11px] font-bold text-slate-300 mb-1.5 uppercase tracking-wider">
                       {t.card.businessTypeLabel} <span className="text-orange-400">*</span>
                     </label>
-                    <select
-                      value={quickProjectType}
-                      onChange={(e) => setQuickProjectType(e.target.value)}
-                      className="w-full px-3.5 py-2.5 bg-[#141F3D] border border-slate-700 hover:border-slate-600 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 text-white rounded-xl text-xs font-medium focus:outline-none transition-colors"
+                    <motion.div 
+                      whileHover={{ y: -2, transition: { duration: 0.18 } }}
+                      className="rounded-xl"
                     >
-                      {PROJECT_TYPES.map(pt => (
-                        <option key={pt.value} value={pt.value} className="bg-[#0B132B] text-white">
-                          {pt.label}
-                        </option>
-                      ))}
-                    </select>
+                      <select
+                        value={quickProjectType}
+                        onChange={(e) => setQuickProjectType(e.target.value)}
+                        className="w-full px-3.5 py-2.5 bg-[#141F3D] border border-slate-700 hover:border-slate-600 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 text-white rounded-xl text-xs font-medium focus:outline-none transition-colors shadow-sm hover:shadow-md cursor-pointer"
+                      >
+                        {PROJECT_TYPES.map(pt => (
+                          <option key={pt.value} value={pt.value} className="bg-[#0B132B] text-white">
+                            {pt.label}
+                          </option>
+                        ))}
+                      </select>
+                    </motion.div>
                   </div>
 
                   {/* Dropdown 2: State / Region */}
@@ -744,17 +841,22 @@ export const LandingPage: React.FC = () => {
                     <label className="block text-[11px] font-bold text-slate-300 mb-1.5 uppercase tracking-wider">
                       {t.card.regionLabel} <span className="text-orange-400">*</span>
                     </label>
-                    <select
-                      value={quickLocation}
-                      onChange={(e) => setQuickLocation(e.target.value)}
-                      className="w-full px-3.5 py-2.5 bg-[#141F3D] border border-slate-700 hover:border-slate-600 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 text-white rounded-xl text-xs font-medium focus:outline-none transition-colors"
+                    <motion.div 
+                      whileHover={{ y: -2, transition: { duration: 0.18 } }}
+                      className="rounded-xl"
                     >
-                      {RECOGNIZED_DISTRICTS.map(dist => (
-                        <option key={dist} value={dist} className="bg-[#0B132B] text-white">
-                          {dist}
-                        </option>
-                      ))}
-                    </select>
+                      <select
+                        value={quickLocation}
+                        onChange={(e) => setQuickLocation(e.target.value)}
+                        className="w-full px-3.5 py-2.5 bg-[#141F3D] border border-slate-700 hover:border-slate-600 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 text-white rounded-xl text-xs font-medium focus:outline-none transition-colors shadow-sm hover:shadow-md cursor-pointer"
+                      >
+                        {RECOGNIZED_DISTRICTS.map(dist => (
+                          <option key={dist} value={dist} className="bg-[#0B132B] text-white">
+                            {dist}
+                          </option>
+                        ))}
+                      </select>
+                    </motion.div>
                   </div>
 
                   {/* Dropdown 3: Industry Sector */}
@@ -762,28 +864,35 @@ export const LandingPage: React.FC = () => {
                     <label className="block text-[11px] font-bold text-slate-300 mb-1.5 uppercase tracking-wider">
                       {t.card.sectorLabel} <span className="text-orange-400">*</span>
                     </label>
-                    <select
-                      value={quickIndustry}
-                      onChange={(e) => setQuickIndustry(e.target.value)}
-                      className="w-full px-3.5 py-2.5 bg-[#141F3D] border border-slate-700 hover:border-slate-600 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 text-white rounded-xl text-xs font-medium focus:outline-none transition-colors"
+                    <motion.div 
+                      whileHover={{ y: -2, transition: { duration: 0.18 } }}
+                      className="rounded-xl"
                     >
-                      {RECOGNIZED_SECTORS.map(sec => (
-                        <option key={sec} value={sec} className="bg-[#0B132B] text-white">
-                          {sec}
-                        </option>
-                      ))}
-                    </select>
+                      <select
+                        value={quickIndustry}
+                        onChange={(e) => setQuickIndustry(e.target.value)}
+                        className="w-full px-3.5 py-2.5 bg-[#141F3D] border border-slate-700 hover:border-slate-600 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 text-white rounded-xl text-xs font-medium focus:outline-none transition-colors shadow-sm hover:shadow-md cursor-pointer"
+                      >
+                        {RECOGNIZED_SECTORS.map(sec => (
+                          <option key={sec} value={sec} className="bg-[#0B132B] text-white">
+                            {sec}
+                          </option>
+                        ))}
+                      </select>
+                    </motion.div>
                   </div>
 
                   {/* "Get My Roadmap" CTA Button (Dark Filled) */}
-                  <button
+                  <motion.button
+                    whileHover={{ y: -2, transition: { duration: 0.18 } }}
+                    whileTap={{ y: 0 }}
                     type="submit"
-                    className="w-full mt-2 py-3.5 px-4 bg-slate-900 hover:bg-slate-950 text-white font-black text-xs uppercase tracking-wider rounded-xl border border-slate-700 hover:border-orange-500/60 shadow-lg shadow-black/40 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98 group"
+                    className="w-full mt-2 py-3.5 px-4 bg-slate-900 hover:bg-slate-950 text-white font-black text-xs uppercase tracking-wider rounded-xl border border-slate-700 hover:border-orange-500/60 shadow-lg shadow-black/40 hover:shadow-orange-500/10 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-98 group"
                   >
                     <Compass className="w-4 h-4 text-orange-400 group-hover:rotate-45 transition-transform" />
                     <span>{t.card.button}</span>
                     <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-1 transition-transform" />
-                  </button>
+                  </motion.button>
 
                   {/* Privacy & Security Note */}
                   <div className="pt-2 flex items-center justify-center gap-1.5 text-[11px] text-slate-400">
@@ -794,10 +903,27 @@ export const LandingPage: React.FC = () => {
                 </form>
 
               </div>
-            </div>
+            </motion.div>
 
           </div>
         </div>
+
+        {/* Continuous "Scroll to explore" indicator */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6, duration: 0.4 }}
+          className="absolute bottom-3 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-1 text-[11px] font-semibold text-slate-400 cursor-pointer z-20 hover:text-orange-400 transition-colors select-none"
+          onClick={scrollToHowItWorks}
+        >
+          <span className="tracking-wider uppercase text-[10px] text-slate-400/80">Scroll to explore</span>
+          <motion.div
+            animate={{ y: [0, 5, 0] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <ChevronDown className="w-4 h-4 text-orange-400/90" />
+          </motion.div>
+        </motion.div>
 
       </section>
 
@@ -827,79 +953,47 @@ export const LandingPage: React.FC = () => {
 
         {/* 4 Pillar Cards in a Row (Stack on Mobile, 4 Cols on Desktop) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          
-          {/* Card 1: PREDICT */}
-          <div className="bg-[#0B132B]/80 hover:bg-[#0E1838] border border-slate-800 hover:border-amber-500/50 rounded-2xl p-6 transition-all group relative overflow-hidden shadow-lg flex flex-col justify-between">
-            <div>
-              <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center mb-5 group-hover:bg-amber-500 group-hover:text-slate-950 transition-colors">
-                <Compass className="w-6 h-6" />
-              </div>
-              <h3 className="text-base font-black text-white tracking-tight">
-                {t.whatNitipathDoes.cards[0].title}
-              </h3>
-              <p className="text-xs text-slate-300 mt-2.5 leading-relaxed font-normal">
-                {t.whatNitipathDoes.cards[0].desc}
-              </p>
-            </div>
-            <div className="mt-4 pt-3 border-t border-slate-800/80 text-[11px] text-amber-400/80 font-medium flex items-center gap-1">
-              <span>Risk & timeline projection</span>
-            </div>
-          </div>
+          {t.whatNitipathDoes.cards.map((card, idx) => {
+            const icons = [
+              <Compass className="w-6 h-6" key="predict" />,
+              <ShieldCheck className="w-6 h-6" key="prevent" />,
+              <Zap className="w-6 h-6" key="optimize" />,
+              <LineChart className="w-6 h-6" key="track" />,
+            ];
+            const subLabels = [
+              'Risk & timeline projection',
+              'Pre-submission OCR audit',
+              'Parallel track acceleration',
+              'Compliance calendar lifecycle',
+            ];
 
-          {/* Card 2: PREVENT */}
-          <div className="bg-[#0B132B]/80 hover:bg-[#0E1838] border border-slate-800 hover:border-emerald-500/50 rounded-2xl p-6 transition-all group relative overflow-hidden shadow-lg flex flex-col justify-between">
-            <div>
-              <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center mb-5 group-hover:bg-emerald-500 group-hover:text-slate-950 transition-colors">
-                <ShieldCheck className="w-6 h-6" />
-              </div>
-              <h3 className="text-base font-black text-white tracking-tight">
-                {t.whatNitipathDoes.cards[1].title}
-              </h3>
-              <p className="text-xs text-slate-300 mt-2.5 leading-relaxed font-normal">
-                {t.whatNitipathDoes.cards[1].desc}
-              </p>
-            </div>
-            <div className="mt-4 pt-3 border-t border-slate-800/80 text-[11px] text-emerald-400/80 font-medium flex items-center gap-1">
-              <span>Pre-submission OCR audit</span>
-            </div>
-          </div>
-
-          {/* Card 3: OPTIMIZE */}
-          <div className="bg-[#0B132B]/80 hover:bg-[#0E1838] border border-slate-800 hover:border-blue-500/50 rounded-2xl p-6 transition-all group relative overflow-hidden shadow-lg flex flex-col justify-between">
-            <div>
-              <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-400 flex items-center justify-center mb-5 group-hover:bg-blue-500 group-hover:text-white transition-colors">
-                <Zap className="w-6 h-6" />
-              </div>
-              <h3 className="text-base font-black text-white tracking-tight">
-                {t.whatNitipathDoes.cards[2].title}
-              </h3>
-              <p className="text-xs text-slate-300 mt-2.5 leading-relaxed font-normal">
-                {t.whatNitipathDoes.cards[2].desc}
-              </p>
-            </div>
-            <div className="mt-4 pt-3 border-t border-slate-800/80 text-[11px] text-blue-400/80 font-medium flex items-center gap-1">
-              <span>Parallel track acceleration</span>
-            </div>
-          </div>
-
-          {/* Card 4: TRACK */}
-          <div className="bg-[#0B132B]/80 hover:bg-[#0E1838] border border-slate-800 hover:border-purple-500/50 rounded-2xl p-6 transition-all group relative overflow-hidden shadow-lg flex flex-col justify-between">
-            <div>
-              <div className="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-400 flex items-center justify-center mb-5 group-hover:bg-purple-500 group-hover:text-white transition-colors">
-                <LineChart className="w-6 h-6" />
-              </div>
-              <h3 className="text-base font-black text-white tracking-tight">
-                {t.whatNitipathDoes.cards[3].title}
-              </h3>
-              <p className="text-xs text-slate-300 mt-2.5 leading-relaxed font-normal">
-                {t.whatNitipathDoes.cards[3].desc}
-              </p>
-            </div>
-            <div className="mt-4 pt-3 border-t border-slate-800/80 text-[11px] text-purple-400/80 font-medium flex items-center gap-1">
-              <span>Compliance calendar lifecycle</span>
-            </div>
-          </div>
-
+            return (
+              <motion.div
+                key={card.key}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.3, delay: idx * 0.1, ease: 'easeOut' }}
+                whileHover={{ y: -3, transition: { duration: 0.18 } }}
+                className="bg-[#0B132B]/80 hover:bg-[#0E1838] border border-slate-800 hover:border-amber-500/50 rounded-2xl p-6 transition-colors group relative overflow-hidden shadow-lg flex flex-col justify-between"
+              >
+                <div>
+                  <div className={`w-12 h-12 rounded-xl border flex items-center justify-center mb-5 transition-colors ${card.iconColor}`}>
+                    {icons[idx]}
+                  </div>
+                  <h3 className="text-base font-black text-white tracking-tight">
+                    {card.title}
+                  </h3>
+                  <p className="text-xs text-slate-300 mt-2.5 leading-relaxed font-normal">
+                    {card.desc}
+                  </p>
+                </div>
+                <div className="mt-4 pt-3 border-t border-slate-800/80 text-[11px] text-amber-400/80 font-medium flex items-center gap-1">
+                  <span>{subLabels[idx]}</span>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
 
         {/* ========================================================================= */}
@@ -947,21 +1041,35 @@ export const LandingPage: React.FC = () => {
             ];
 
             return (
-              <div key={step.num} className="bg-[#0B132B]/60 p-6 rounded-2xl border border-slate-800 hover:border-slate-700 transition-all relative group shadow-sm">
-                <span className="text-2xl font-black text-slate-700/50 absolute top-4 right-4 group-hover:text-orange-500/30 transition-colors">
-                  {step.num}
-                </span>
-                <div className="flex items-center gap-2 text-orange-400 font-bold text-xs">
-                  {icons[idx]}
-                  <span>Step {step.num}</span>
+              <motion.div 
+                key={step.num}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{ 
+                  duration: 0.28, 
+                  delay: idx * 0.08, 
+                  ease: 'easeOut' 
+                }}
+                whileHover={{ y: -3, transition: { duration: 0.18 } }}
+                className="bg-[#0B132B]/60 p-6 rounded-2xl border border-slate-800 hover:border-slate-700 transition-colors relative group shadow-sm flex flex-col justify-between"
+              >
+                <div>
+                  <span className="text-2xl font-black text-slate-700/50 absolute top-4 right-4 group-hover:text-orange-500/30 transition-colors">
+                    {step.num}
+                  </span>
+                  <div className="flex items-center gap-2 text-orange-400 font-bold text-xs">
+                    {icons[idx]}
+                    <span>Step {step.num}</span>
+                  </div>
+                  <h3 className="text-sm font-bold text-white mt-2.5">
+                    {step.title}
+                  </h3>
+                  <p className="text-xs text-slate-400 mt-1.5 leading-relaxed font-normal">
+                    {step.desc}
+                  </p>
                 </div>
-                <h3 className="text-sm font-bold text-white mt-2.5">
-                  {step.title}
-                </h3>
-                <p className="text-xs text-slate-400 mt-1.5 leading-relaxed font-normal">
-                  {step.desc}
-                </p>
-              </div>
+              </motion.div>
             );
           })}
 
