@@ -44,10 +44,17 @@ export const RegisterPage: React.FC = () => {
       return;
     }
 
+    const normalizedEmail = email.trim().toLowerCase();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(normalizedEmail)) {
+      setErrorMessage("Please enter a valid business email address.");
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       // Send OTP via Supabase Auth
-      const res = await api.sendOtp(email, 'business');
+      const res = await api.sendOtp(normalizedEmail, 'business');
       if (res?.data?.devOtp) {
         setDevOtp(res.data.devOtp);
       }
@@ -56,7 +63,7 @@ export const RegisterPage: React.FC = () => {
       }
 
       setStep('otp');
-      showToast(`Verification code sent to ${email}`);
+      showToast(`Verification code sent to ${normalizedEmail}`);
     } catch (err: any) {
       setErrorMessage(err.message || 'Failed to dispatch verification code. Please check your email.');
     } finally {
@@ -184,7 +191,10 @@ export const RegisterPage: React.FC = () => {
                     <input
                       type="email"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        if (errorMessage) setErrorMessage(null);
+                      }}
                       required
                       className="w-full pl-9 pr-3 py-2.5 bg-white border border-slate-300 rounded-lg text-xs font-medium text-slate-900 focus:ring-2 focus:ring-govNavy-700"
                       placeholder="Enter official email"

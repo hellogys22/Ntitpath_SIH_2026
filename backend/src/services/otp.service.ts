@@ -42,10 +42,18 @@ export class OtpService {
   private static readonly MAX_REQUESTS_PER_WINDOW = 5;
 
   /**
-   * Enforces server-side rate limit per email (max 5 requests per hour).
+   * Enforces server-side rate limit per email.
+   * In non-production, bypasses for evaluation demo accounts and allows generous testing allowance.
    */
   public static checkRateLimit(email: string): { allowed: boolean; retryAfterSeconds: number } {
     const normalized = email.trim().toLowerCase();
+
+    // Demo evaluation accounts bypass rate limits in non-production environments
+    const isDemoAccount = normalized === 'business@demo.com' || normalized === 'epcb.officer@cg.gov.in';
+    if (isDemoAccount && process.env.NODE_ENV !== 'production') {
+      return { allowed: true, retryAfterSeconds: 0 };
+    }
+
     const now = Date.now();
     const timestamps = this.rateLimitMap.get(normalized) || [];
 

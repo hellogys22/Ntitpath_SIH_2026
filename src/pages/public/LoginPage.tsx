@@ -55,12 +55,19 @@ export const LoginPage: React.FC = () => {
   };
 
   // --- OTP FLOW HANDLERS ---
-  const handleSendOtp = async (e?: React.FormEvent) => {
+  const handleSendOtp = async (e?: React.FormEvent, overrideEmail?: string) => {
     if (e) e.preventDefault();
-    const targetEmail = (email || 'business@demo.com').trim().toLowerCase();
+    const rawTarget = overrideEmail !== undefined ? overrideEmail : email;
+    const targetEmail = (rawTarget || 'business@demo.com').trim().toLowerCase();
     
     if (!targetEmail) {
       setErrorMessage("Please enter your registered enterprise email.");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(targetEmail)) {
+      setErrorMessage("Please enter a valid email address (e.g. business@demo.com).");
       return;
     }
 
@@ -88,8 +95,9 @@ export const LoginPage: React.FC = () => {
     setIsExpired(false);
 
     try {
+      const targetEmail = email.trim().toLowerCase();
       const res = await api.verifyOtp({
-        email: email.trim().toLowerCase(),
+        email: targetEmail,
         otp: otpCode,
         type: 'business',
       });
@@ -131,11 +139,12 @@ export const LoginPage: React.FC = () => {
     setErrorMessage(null);
     setIsExpired(false);
     try {
-      const res = await api.sendOtp(email, 'business');
+      const targetEmail = email.trim().toLowerCase();
+      const res = await api.sendOtp(targetEmail, 'business');
       if (res?.data?.codeLength) {
         setCodeLength(res.data.codeLength);
       }
-      showToast(`Fresh verification code sent to ${email}`);
+      showToast(`Fresh verification code sent to ${targetEmail}`);
     } catch (err: any) {
       setErrorMessage(err.message || 'Failed to resend verification code.');
     }
@@ -326,7 +335,7 @@ export const LoginPage: React.FC = () => {
               </button>
             </div>
 
-            {errorMessage && (
+            {errorMessage && (authMethod === 'password' || otpStep === 'input-email') && (
               <div className="mb-4 p-3 rounded-lg bg-rose-50 border border-rose-200 text-xs text-rose-700 font-medium">
                 {errorMessage}
               </div>
@@ -345,7 +354,10 @@ export const LoginPage: React.FC = () => {
                         <input
                           type="email"
                           value={email}
-                          onChange={(e) => setEmail(e.target.value)}
+                          onChange={(e) => {
+                            setEmail(e.target.value);
+                            if (errorMessage) setErrorMessage(null);
+                          }}
                           required
                           placeholder="e.g. business@demo.com or enterprise@company.com"
                           className="w-full pl-9 pr-3 py-2.5 bg-white border border-slate-300 rounded-md text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-govNavy-700"
@@ -353,7 +365,7 @@ export const LoginPage: React.FC = () => {
                         <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
                       </div>
                       <p className="text-[11px] text-slate-500 mt-1">
-                        We will dispatch a 6-digit single-use verification code via Supabase Auth.
+                        We will dispatch a single-use verification code via Supabase Auth.
                       </p>
                     </div>
 
@@ -366,7 +378,8 @@ export const LoginPage: React.FC = () => {
                         type="button"
                         onClick={() => {
                           setEmail('business@demo.com');
-                          handleSendOtp();
+                          if (errorMessage) setErrorMessage(null);
+                          handleSendOtp(undefined, 'business@demo.com');
                         }}
                         className="w-full text-left p-2 rounded bg-white border border-slate-300 hover:border-govNavy-700 transition-colors flex items-center justify-between cursor-pointer group"
                       >
@@ -427,7 +440,7 @@ export const LoginPage: React.FC = () => {
                         isExpired={isExpired}
                         hideAutoFill={true}
                         title="Business Sign In Verification"
-                        description={`Enter the 6-digit verification code sent to ${email} to sign in to your industrial compliance dashboard.`}
+                        description={`Enter the ${codeLength}-digit verification code sent to ${email} to sign in to your industrial compliance dashboard.`}
                       />
                     </div>
                   </div>

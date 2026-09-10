@@ -64,6 +64,12 @@ export const OfficerLoginPage: React.FC = () => {
       return;
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailToSend)) {
+      setErrorMessage("Please enter a valid government email address (e.g. epcb.officer@cg.gov.in).");
+      return;
+    }
+
     setErrorMessage(null);
     setStealthNotice(null);
     setIsSubmitting(true);
@@ -263,7 +269,10 @@ export const OfficerLoginPage: React.FC = () => {
                       <input
                         type="email"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => {
+                          setEmail(e.target.value);
+                          if (errorMessage) setErrorMessage(null);
+                        }}
                         required
                         placeholder="e.g. officer@gov.in or epcb.officer@cg.gov.in"
                         className="w-full pl-9 pr-3 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs font-medium text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/50"

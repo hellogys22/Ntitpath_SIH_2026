@@ -17,8 +17,18 @@ export class OtpController {
         return;
       }
 
+      const normalizedEmail = String(email).trim().toLowerCase();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(normalizedEmail)) {
+        res.status(400).json({
+          success: false,
+          message: 'Please provide a valid email address (e.g. business@demo.com).',
+        });
+        return;
+      }
+
       const result = await OtpService.sendOtp({
-        email,
+        email: normalizedEmail,
         type,
         ipAddress: req.ip,
         userAgent: req.headers['user-agent'],
@@ -38,7 +48,10 @@ export class OtpController {
         });
         return;
       }
-      next(error);
+      res.status(error.status || error.statusCode || 400).json({
+        success: false,
+        message: error.message || 'Failed to dispatch verification code.',
+      });
     }
   }
 
