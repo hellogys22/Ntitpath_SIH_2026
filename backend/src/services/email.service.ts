@@ -214,4 +214,151 @@ export class EmailService {
       message: 'SMTP credentials not configured in backend/.env; live delivery pending configuration.',
     };
   }
+
+  /**
+   * Dispatches the genuine Supabase recovery link to the user's real email address.
+   */
+  public static async sendPasswordResetEmail(options: {
+    to: string;
+    resetLink: string;
+    recipientName?: string;
+  }): Promise<{ sent: boolean; message: string }> {
+    const { to, resetLink, recipientName } = options;
+    const from = process.env.SMTP_FROM || `"NitiPath Portal" <${process.env.SMTP_USER || 'noreply@nitipath.gov.in'}>`;
+    const subject = `NitiPath (नीतिपथ) Password Reset Request`;
+
+    const html = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>${subject}</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; color: #1e293b;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8fafc; padding: 32px 16px;">
+    <tr>
+      <td align="center">
+        <table width="100%" style="max-width: 560px; background-color: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);">
+          
+          <!-- Top Header -->
+          <tr style="background-color: #0f172a; color: #ffffff;">
+            <td style="padding: 24px 32px;">
+              <div style="font-size: 22px; font-weight: 800; letter-spacing: 0.5px; color: #f8fafc;">
+                नीतिपथ <span style="color: #f59e0b;">| NitiPath</span>
+              </div>
+              <div style="font-size: 11px; color: #94a3b8; margin-top: 4px; font-weight: 500;">
+                National Industrial Approval & Statutory Compliance Intelligence Platform (SIH26130)
+              </div>
+            </td>
+          </tr>
+
+          <!-- Main Body -->
+          <tr>
+            <td style="padding: 32px;">
+              <h2 style="margin: 0 0 16px; font-size: 18px; font-weight: 700; color: #0f172a;">
+                Password Reset Request / पासवर्ड रीसेट अनुरोध
+              </h2>
+              
+              <p style="margin: 0 0 16px; font-size: 14px; line-height: 1.6; color: #334155;">
+                Hello${recipientName ? ` <strong>${recipientName}</strong>` : ''},
+              </p>
+              
+              <p style="margin: 0 0 24px; font-size: 14px; line-height: 1.6; color: #334155;">
+                We received a request to reset the password associated with your enterprise profile on the <strong>NitiPath Portal</strong>. Click the button below to establish a new password for your account:
+              </p>
+
+              <!-- CTA Button -->
+              <div style="text-align: center; margin: 32px 0;">
+                <a href="${resetLink}" style="display: inline-block; background-color: #0f172a; color: #ffffff; font-size: 14px; font-weight: 700; text-decoration: none; padding: 14px 32px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                  Reset My Password / पासवर्ड रीसेट करें →
+                </a>
+              </div>
+
+              <div style="background-color: #fef3c7; border: 1px solid #fde68a; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+                <p style="margin: 0; font-size: 12px; line-height: 1.5; color: #92400e;">
+                  <strong>Security Notice:</strong> This password reset link is single-use and will expire in <strong>60 minutes</strong>. If you did not initiate this password reset request, you may safely disregard this email. Your password will remain unchanged.
+                </p>
+              </div>
+
+              <p style="margin: 0 0 8px; font-size: 12px; color: #64748b;">
+                If the button above does not work, copy and paste this link into your browser:
+              </p>
+              <p style="margin: 0; font-size: 11px; word-break: break-all; color: #0284c7;">
+                <a href="${resetLink}" style="color: #0284c7; text-decoration: underline;">${resetLink}</a>
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr style="background-color: #f8fafc; border-top: 1px solid #e2e8f0;">
+            <td style="padding: 20px 32px; text-align: center; font-size: 11px; color: #64748b; line-height: 1.5;">
+              Ministry of Commerce & Industry • Govt. of India<br />
+              This is an automated system notification. Please do not reply to this email.
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+`;
+
+    // 1. Try sending via Resend API if configured
+    if (process.env.RESEND_API_KEY) {
+      try {
+        const resendRes = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+          },
+          body: JSON.stringify({
+            from: process.env.RESEND_FROM || 'NitiPath Portal <onboarding@resend.dev>',
+            to,
+            subject,
+            html,
+          }),
+        });
+
+        const resendData: any = await resendRes.json();
+        if (resendRes.ok) {
+          console.log(`[NitiPath EmailService] ✅ Password reset email delivered to ${to} via Resend (ID: ${resendData.id})`);
+          return { sent: true, message: `Password reset email sent to ${to} via Resend` };
+        } else {
+          console.warn(`[NitiPath EmailService] Resend API error:`, resendData);
+        }
+      } catch (resendErr: any) {
+        console.warn(`[NitiPath EmailService] Resend dispatch failed: ${resendErr.message}`);
+      }
+    }
+
+    // 2. Try sending via configured SMTP transporter
+    const transporter = this.getTransporter();
+    if (transporter) {
+      try {
+        const info = await transporter.sendMail({
+          from,
+          to,
+          subject,
+          html,
+          text: `Reset your NitiPath password by visiting this link: ${resetLink}. It expires in 60 minutes.`,
+        });
+        console.log(`[NitiPath EmailService] ✅ Password reset email delivered to ${to} via SMTP (MessageId: ${info.messageId})`);
+        return { sent: true, message: `Password reset email delivered to ${to}` };
+      } catch (mailErr: any) {
+        console.error(`[NitiPath EmailService] ❌ SMTP send failed for ${to}:`, mailErr.message);
+        return { sent: false, message: `SMTP dispatch failed: ${mailErr.message}` };
+      }
+    }
+
+    // 3. Fallback notice
+    console.log(`[NitiPath EmailService] ℹ️ Password Reset Link for ${to}: [${resetLink}]`);
+    return {
+      sent: false,
+      message: 'SMTP credentials not configured in backend/.env; live delivery logged.',
+    };
+  }
 }
+

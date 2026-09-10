@@ -149,6 +149,20 @@ class ApiClient {
     return this.request<ApiResponse<any>>('/auth/me');
   }
 
+  async forgotPassword(email: string, redirectTo?: string) {
+    return this.request<ApiResponse<any>>('/auth/forgot-password', {
+      method: 'POST',
+      body: JSON.stringify({ email, redirectTo }),
+    });
+  }
+
+  async resetPassword(email: string, newPassword: string) {
+    return this.request<ApiResponse<any>>('/auth/password/reset', {
+      method: 'POST',
+      body: JSON.stringify({ email, newPassword }),
+    });
+  }
+
   // Business Profile
   async getProfile() {
     return this.request<ApiResponse<any>>('/business/profile');

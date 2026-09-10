@@ -492,9 +492,12 @@ export const LoginPage: React.FC = () => {
                     <label className="text-xs font-bold text-slate-800">
                       पासवर्ड / Password <span className="text-rose-600">*</span>
                     </label>
-                    <span className="text-[11px] text-govNavy-700 font-semibold hover:underline cursor-pointer">
+                    <Link
+                      to="/forgot-password"
+                      className="text-[11px] text-govNavy-700 font-semibold hover:underline cursor-pointer"
+                    >
                       Forgot Password?
-                    </span>
+                    </Link>
                   </div>
                   <div className="relative">
                     <input

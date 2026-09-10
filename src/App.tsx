@@ -7,6 +7,8 @@ import { Toast } from './components/ui/Toast';
 import { LoginPage } from './pages/public/LoginPage';
 import { OfficerLoginPage } from './pages/public/OfficerLoginPage';
 import { RegisterPage } from './pages/public/RegisterPage';
+import { ForgotPasswordPage } from './pages/public/ForgotPasswordPage';
+import { ResetPasswordPage } from './pages/public/ResetPasswordPage';
 import { LandingPage } from './pages/public/LandingPage';
 import { DemoModeBanner } from './components/common/DemoModeBanner';
 
@@ -112,6 +114,8 @@ const AppContent: React.FC = () => {
         <Route path="/login" element={<LoginGatekeeper />} />
         <Route path="/officer-login" element={<OfficerLoginGatekeeper />} />
         <Route path="/register" element={<RegisterGatekeeper />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/assessment" element={<BusinessRoute><AssessmentPage /></BusinessRoute>} />
         <Route path="/onboarding" element={<BusinessRoute><AssessmentPage /></BusinessRoute>} />
 
