@@ -11,6 +11,8 @@ router.use(authenticateJwt);
 router.use(enforceDemoIsolation);
 
 router.post('/upload', upload.single('file'), DocumentController.uploadDocument);
+router.post('/:id/reupload', upload.single('file'), DocumentController.reuploadDocument);
+router.get('/:id/versions', DocumentController.getDocumentVersions);
 router.get('/application/:applicationId', DocumentController.getDocuments);
 router.get('/:id/analyze', DocumentController.analyzeDocument);
 router.get('/:id/download', DocumentController.downloadDocument);

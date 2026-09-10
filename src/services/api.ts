@@ -35,9 +35,12 @@ class ApiClient {
 
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
       ...(options.headers as Record<string, string>),
     };
+
+    if (!(options.body instanceof FormData)) {
+      headers['Content-Type'] = 'application/json';
+    }
 
     const currentToken = this.getToken();
     if (currentToken) {
@@ -222,6 +225,31 @@ class ApiClient {
   }
 
   // Documents & Consistency Audit
+  async uploadDocument(formData: FormData) {
+    return this.request<ApiResponse<any>>('/documents/upload', {
+      method: 'POST',
+      body: formData,
+    });
+  }
+
+  async reuploadDocument(docId: string, formData: FormData) {
+    return this.request<ApiResponse<any>>(`/documents/${docId}/reupload`, {
+      method: 'POST',
+      body: formData,
+    });
+  }
+
+  async getDocumentSignedUrl(docId: string, versionNumber?: number) {
+    const versionParam = versionNumber ? `?version=${versionNumber}` : '';
+    return this.request<ApiResponse<{ signedUrl: string; expiresAt: string; fileName: string; mimeType: string; isSupabase: boolean }>>(
+      `/documents/${docId}/signed-url${versionParam}`
+    );
+  }
+
+  async getDocumentVersions(docId: string) {
+    return this.request<ApiResponse<any[]>>(`/documents/${docId}/versions`);
+  }
+
   async runConsistencyAudit(appId: string) {
     return this.request<ApiResponse<any>>(`/documents/application/${appId}/consistency-audit`);
   }

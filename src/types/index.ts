@@ -40,7 +40,30 @@ export interface Approval {
   canBeParallel?: boolean;
 }
 
-export type DocumentStatus = 'Verified' | 'Needs Correction' | 'Missing' | 'Under Review';
+export type DocumentStatus = 'Verified' | 'Needs Correction' | 'Not Uploaded' | 'Missing' | 'Under Review';
+
+export type RuleCheckCategory = 'REQUIRED_FIELDS' | 'ENTITY_MATCH' | 'VALIDITY_DATE' | 'CROSS_DOCUMENT_CONSISTENCY';
+
+export interface RuleCheckResult {
+  ruleId: string;
+  category: RuleCheckCategory;
+  title: string;
+  passed: boolean;
+  message: string;
+  remediation: string;
+  expectedValue?: string;
+  foundValue?: string;
+}
+
+export interface DocumentVersionItem {
+  versionNumber: number;
+  fileName: string;
+  fileSizeBytes?: number;
+  uploadedAt: string;
+  status: DocumentStatus;
+  ruleChecks?: RuleCheckResult[];
+  fileUrl?: string;
+}
 
 export interface DocumentMismatch {
   field: string;
@@ -52,6 +75,8 @@ export interface DocumentMismatch {
 export interface DocumentItem {
   id: string;
   name: string;
+  fileName?: string;
+  docType?: string;
   requirement: 'Required' | 'Optional';
   status: DocumentStatus;
   issue?: string;
@@ -60,9 +85,14 @@ export interface DocumentItem {
   approvalName: string;
   uploadedDate?: string;
   fileSize?: string;
+  fileUrl?: string;
   mismatchDetail?: DocumentMismatch;
   issuingAuthority?: string;
   acquisitionDifficulty?: 'Easy' | 'Moderate' | 'Difficult' | 'High';
+  ruleChecks?: RuleCheckResult[];
+  versions?: DocumentVersionItem[];
+  currentVersion?: number;
+  extractedMetadata?: Record<string, any>;
 }
 
 export interface RiskItem {

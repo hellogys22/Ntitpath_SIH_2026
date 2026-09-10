@@ -180,7 +180,7 @@ export const DashboardPage: React.FC = () => {
           </div>
 
           {/* Parallel Work & Critical Path Visualizer */}
-          <DependencyGraph />
+          <DependencyGraph onSelectApproval={(appId) => navigate(`/approvals/${appId}`)} />
 
         </main>
       </div>

@@ -129,14 +129,32 @@ model Document {
   filePath             String?
   fileSizeBytes        Int?
   mimeType             String?
-  status               String       @default("NOT_UPLOADED") // NOT_UPLOADED, UPLOADED, VERIFIED, REJECTED, MISMATCH_DETECTED
+  status               String            @default("NOT_UPLOADED") // NOT_UPLOADED, UPLOADED, VERIFIED, REJECTED, MISMATCH_DETECTED
   extractedText        String?
-  extractedMetadataJson String?     // e.g. {"builtUpAreaSqFt": 10000, "capacity": "50 TPD"}
-  mismatchDetailsJson  String?      // e.g. {"conflictsWith": "DPR", "field": "builtUpAreaSqFt", "detectedValue": 10000, "expectedValue": 12500, "severity": "HIGH"}
+  extractedMetadataJson String?          // e.g. {"builtUpAreaSqFt": 10000, "capacity": "50 TPD"}
+  mismatchDetailsJson  String?           // e.g. {"conflictsWith": "DPR", "field": "builtUpAreaSqFt", "detectedValue": 10000, "expectedValue": 12500, "severity": "HIGH"}
+  ruleChecksJson       String?
+  currentVersion       Int               @default(1)
   uploadedAt           DateTime?
   verifiedAt           DateTime?
-  createdAt            DateTime     @default(now())
-  updatedAt            DateTime     @updatedAt
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  versions             DocumentVersion[]
+}
+
+model DocumentVersion {
+  id                    String    @id @default(uuid())
+  documentId            String
+  document              Document  @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  versionNumber         Int       @default(1)
+  fileName              String
+  filePath              String?
+  fileSizeBytes         Int?
+  mimeType              String?
+  status                String    @default("UPLOADED")
+  ruleChecksJson        String?
+  extractedMetadataJson String?
+  uploadedAt            DateTime  @default(now())
 }
 
 model RiskItem {

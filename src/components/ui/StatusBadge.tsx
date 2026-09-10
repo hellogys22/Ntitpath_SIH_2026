@@ -26,8 +26,11 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, size = 'md' })
     colorStyle = 'bg-blue-50 text-blue-800 border-blue-200';
     Icon = Clock;
   } else if (normalized.includes('needs correction') || normalized.includes('needs attention') || normalized.includes('flagged')) {
-    colorStyle = 'bg-amber-50 text-amber-800 border-amber-300 font-semibold';
+    colorStyle = 'bg-amber-50 text-amber-900 border-amber-300 font-semibold';
     Icon = AlertTriangle;
+  } else if (normalized.includes('not uploaded')) {
+    colorStyle = 'bg-slate-100 text-slate-600 border-slate-300 font-medium';
+    Icon = FileText;
   } else if (normalized.includes('missing') || normalized.includes('blocked')) {
     colorStyle = 'bg-rose-50 text-rose-800 border-rose-200 font-semibold';
     Icon = XCircle;
