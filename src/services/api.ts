@@ -44,21 +44,57 @@ class ApiClient {
       headers['Authorization'] = `Bearer ${currentToken}`;
     }
 
+    const primaryUrl = `${API_BASE}${endpoint}`;
+    const directBackendUrl = `http://localhost:5001/api${endpoint}`;
+
+    let response: Response | null = null;
+
     try {
-      const response = await fetch(`${API_BASE}${endpoint}`, {
+      response = await fetch(primaryUrl, {
         ...options,
         headers,
       });
 
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || 'API request failed');
+      // If proxy returned 404/502 and primary was relative /api, attempt direct backend port 5001
+      if ((response.status === 404 || response.status === 502) && !primaryUrl.includes(':5001')) {
+        console.warn(`[NitiPath API] Proxy returned ${response.status} on ${primaryUrl}, retrying direct backend at ${directBackendUrl}`);
+        response = await fetch(directBackendUrl, {
+          ...options,
+          headers,
+        });
       }
-      return data;
-    } catch (error: any) {
-      console.warn(`[NitiPath API Warning] ${endpoint} -> ${error.message}`);
-      throw error;
+    } catch (networkErr: any) {
+      // If primary fetch failed (e.g. Failed to fetch), try direct backend fallback
+      if (!primaryUrl.includes(':5001')) {
+        try {
+          console.warn(`[NitiPath API] Primary fetch failed (${networkErr.message}), retrying direct backend at ${directBackendUrl}`);
+          response = await fetch(directBackendUrl, {
+            ...options,
+            headers,
+          });
+        } catch (fallbackErr: any) {
+          throw new Error(`Unable to connect to NitiPath backend service. Please ensure backend is running on http://localhost:5001 (${networkErr.message})`);
+        }
+      } else {
+        throw networkErr;
+      }
     }
+
+    if (!response) {
+      throw new Error('No response received from NitiPath API server.');
+    }
+
+    const contentType = response.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
+      const errorText = await response.text();
+      throw new Error(`API server returned non-JSON response (${response.status}): ${errorText.slice(0, 100)}`);
+    }
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'API request failed');
+    }
+    return data;
   }
 
   // Auth
