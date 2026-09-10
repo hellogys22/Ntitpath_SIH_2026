@@ -21,7 +21,7 @@ import { api } from '../../services/api';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
-  const { login, setUser, setRole, updateBusinessProfile, enterDemoMode, showToast } = useApp();
+  const { login, setUser, setRole, updateBusinessProfile, syncLiveDatabase, enterDemoMode, showToast } = useApp();
 
   // Mode: 'otp' (recommended passwordless) | 'password' (traditional)
   const [authMethod, setAuthMethod] = useState<'otp' | 'password'>('otp');
@@ -119,8 +119,21 @@ export const LoginPage: React.FC = () => {
           });
         }
 
+        try {
+          await syncLiveDatabase('business');
+        } catch (syncErr) {
+          console.log('Database sync note:', syncErr);
+        }
+
         showToast(`Welcome back, ${res.user.name}! Signed in to Business Portal.`);
-        navigate('/dashboard');
+
+        const searchParams = new URLSearchParams(window.location.search);
+        const redirectParam = searchParams.get('redirect');
+        if (redirectParam && redirectParam !== '/login' && !redirectParam.includes('/login')) {
+          navigate(redirectParam);
+        } else {
+          navigate('/dashboard');
+        }
       } else {
         throw new Error("Verification response did not contain an active user profile.");
       }
@@ -151,7 +164,7 @@ export const LoginPage: React.FC = () => {
   };
 
   // --- PASSWORD FLOW HANDLER ---
-  const handlePasswordSubmit = (e: React.FormEvent) => {
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (captchaInput.trim().toUpperCase() !== captchaCode.toUpperCase()) {
       setCaptchaError(true);
@@ -160,8 +173,14 @@ export const LoginPage: React.FC = () => {
       return;
     }
 
-    login(email || 'business@demo.com', 'business');
-    navigate('/dashboard');
+    await login(email || 'business@demo.com', 'business');
+    const searchParams = new URLSearchParams(window.location.search);
+    const redirectParam = searchParams.get('redirect');
+    if (redirectParam && redirectParam !== '/login' && !redirectParam.includes('/login')) {
+      navigate(redirectParam);
+    } else {
+      navigate('/dashboard');
+    }
   };
 
   return (

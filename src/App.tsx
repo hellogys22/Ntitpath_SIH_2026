@@ -65,6 +65,15 @@ const OfficerLoginGatekeeper: React.FC = () => {
   return <Navigate to={role === 'admin' ? '/admin/dashboard' : '/dashboard'} replace />;
 };
 
+// Register gatekeeper: renders RegisterPage if not logged in; redirects to onboarding roadmap if logged in
+const RegisterGatekeeper: React.FC = () => {
+  const { user, role } = useApp();
+  if (!user) {
+    return <RegisterPage />;
+  }
+  return <Navigate to={role === 'admin' ? '/admin/dashboard' : '/approvals'} replace />;
+};
+
 // Protected Route for Business Users
 const BusinessRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
   const { user, role } = useApp();
@@ -102,11 +111,14 @@ const AppContent: React.FC = () => {
         <Route path="/landing" element={<LandingPage />} />
         <Route path="/login" element={<LoginGatekeeper />} />
         <Route path="/officer-login" element={<OfficerLoginGatekeeper />} />
-        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/register" element={<RegisterGatekeeper />} />
         <Route path="/assessment" element={<BusinessRoute><AssessmentPage /></BusinessRoute>} />
+        <Route path="/onboarding" element={<BusinessRoute><AssessmentPage /></BusinessRoute>} />
 
         {/* Business User Portal */}
         <Route path="/dashboard" element={<BusinessRoute><DashboardPage /></BusinessRoute>} />
+        <Route path="/roadmap" element={<BusinessRoute><ApprovalsPage /></BusinessRoute>} />
+        <Route path="/onboarding/roadmap" element={<BusinessRoute><ApprovalsPage /></BusinessRoute>} />
         <Route path="/profile" element={<BusinessRoute><ProfilePage /></BusinessRoute>} />
         <Route path="/approvals" element={<BusinessRoute><ApprovalsPage /></BusinessRoute>} />
         <Route path="/approvals/:id" element={<BusinessRoute><ApprovalDetailPage /></BusinessRoute>} />

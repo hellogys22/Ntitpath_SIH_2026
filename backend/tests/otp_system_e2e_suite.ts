@@ -2,7 +2,7 @@ import http from 'http';
 import { PrismaClient } from '@prisma/client';
 
 const BACKEND_BASE = 'http://127.0.0.1:5001';
-const FRONTEND_PROXY_BASE = 'http://localhost:3001';
+const FRONTEND_PROXY_BASE = 'http://localhost:3000';
 
 const prisma = new PrismaClient();
 

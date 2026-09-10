@@ -70,6 +70,7 @@ interface AppContextType {
   recalculatePlan: () => void;
   login: (email: string, role: 'business' | 'admin', department?: string) => void;
   logout: () => void;
+  syncLiveDatabase: (roleType: 'business' | 'admin') => Promise<void>;
   isDemoMode: boolean;
   enterDemoMode: () => void;
   exitDemoMode: () => void;
@@ -82,8 +83,61 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [role, setRoleState] = useState<UserRole>('business');
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUserState] = useState<User | null>(() => {
+    try {
+      const savedUser = localStorage.getItem('nitipath_user');
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch (e) {
+      return null;
+    }
+  });
+
+  const [role, setRoleState] = useState<UserRole>(() => {
+    try {
+      const savedRole = localStorage.getItem('nitipath_role');
+      if (savedRole === 'admin' || savedRole === 'business') {
+        return savedRole;
+      }
+      const savedUser = localStorage.getItem('nitipath_user');
+      if (savedUser) {
+        const parsed = JSON.parse(savedUser);
+        if (parsed.role === 'admin' || parsed.role === 'business') {
+          return parsed.role;
+        }
+      }
+      return 'business';
+    } catch (e) {
+      return 'business';
+    }
+  });
+
+  const setUser = (newUser: User | null) => {
+    setUserState(newUser);
+    try {
+      if (newUser) {
+        localStorage.setItem('nitipath_user', JSON.stringify(newUser));
+        if (newUser.role) {
+          localStorage.setItem('nitipath_role', newUser.role);
+          setRoleState(newUser.role);
+        }
+      } else {
+        localStorage.removeItem('nitipath_user');
+        localStorage.removeItem('nitipath_role');
+      }
+    } catch (e) {
+      console.warn('LocalStorage sync warning:', e);
+    }
+  };
+
+  const setRole = (newRole: UserRole) => {
+    setRoleState(newRole);
+    try {
+      localStorage.setItem('nitipath_role', newRole);
+    } catch (e) {
+      console.warn('LocalStorage role sync warning:', e);
+    }
+  };
+
   const [language, setLanguageState] = useState<Language>('EN');
 
   const [businessProfile, setBusinessProfile] = useState<BusinessProfile>(initialBusinessProfile);
@@ -106,9 +160,32 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }, 4000);
   };
 
-  const setRole = (newRole: UserRole) => {
-    setRoleState(newRole);
-  };
+  // Auto-restore / validate live session in background on mount
+  useEffect(() => {
+    const token = api.getToken();
+    if (token) {
+      api.getMe()
+        .then(res => {
+          if (res?.data) {
+            const serverUser = res.data;
+            const mappedRole: UserRole = (serverUser.role === 'OFFICER' || serverUser.role === 'admin') ? 'admin' : 'business';
+            const refreshedUser: User = {
+              id: serverUser.id,
+              email: serverUser.email,
+              name: serverUser.name || 'Verified User',
+              role: mappedRole,
+              companyName: mappedRole === 'business' ? (serverUser.businesses?.[0]?.name || "Raipur Fresh Foods Pvt. Ltd.") : undefined,
+              department: mappedRole === 'admin' ? (serverUser.department || "Commerce & Industries Dept, Govt of CG") : undefined,
+            };
+            setUser(refreshedUser);
+            syncLiveDatabase(mappedRole);
+          }
+        })
+        .catch(err => {
+          console.log('Background session check:', err?.message || err);
+        });
+    }
+  }, []);
 
   const toggleLanguage = () => {
     setLanguageState(prev => {
@@ -545,6 +622,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       recalculatePlan,
       login,
       logout,
+      syncLiveDatabase,
       isDemoMode,
       enterDemoMode,
       exitDemoMode,

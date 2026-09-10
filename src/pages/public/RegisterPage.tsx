@@ -7,10 +7,11 @@ import { Navbar } from '../../components/layout/Navbar';
 import { Footer } from '../../components/layout/Footer';
 import { OtpInput } from '../../components/auth/OtpInput';
 import { api } from '../../services/api';
+import { generateRoadmapAndChecklist } from '../../services/rulesEngine';
 
 export const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
-  const { setUser, setRole, updateBusinessProfile, showToast } = useApp();
+  const { setUser, setRole, updateBusinessProfile, applyGeneratedPlan, syncLiveDatabase, showToast } = useApp();
 
   // Step management: 'form' -> 'otp'
   const [step, setStep] = useState<'form' | 'otp'>('form');
@@ -62,6 +63,7 @@ export const RegisterPage: React.FC = () => {
         setCodeLength(res.data.codeLength);
       }
 
+      setEmail(normalizedEmail);
       setStep('otp');
       showToast(`Verification code sent to ${normalizedEmail}`);
     } catch (err: any) {
@@ -77,8 +79,9 @@ export const RegisterPage: React.FC = () => {
     setIsExpired(false);
 
     try {
+      const targetEmail = email.trim().toLowerCase();
       const res = await api.verifyOtp({
-        email,
+        email: targetEmail,
         otp: otpCode,
         type: 'business',
         companyName: companyName.trim(),
@@ -87,26 +90,86 @@ export const RegisterPage: React.FC = () => {
 
       if (res?.user) {
         // Enforce verified session: Only after successful server-side OTP verification
-        setUser({
+        const verifiedUser = {
           id: res.user.id,
           email: res.user.email,
-          name: res.user.name,
-          role: 'business',
-          companyName: res.business?.name || companyName,
-        });
+          name: res.user.name || companyName.trim() || 'Enterprise Admin',
+          role: 'business' as const,
+          companyName: res.business?.name || companyName.trim() || 'New Industrial Unit',
+        };
+        setUser(verifiedUser);
         setRole('business');
 
-        if (res.business) {
-          updateBusinessProfile({
-            companyName: res.business.name,
-            contactEmail: res.user.email,
-            contactMobile: mobile,
+        // Check if there was quick assessment data stored in sessionStorage or url query params
+        let industry = 'Food Processing / Agro';
+        let location = 'Raipur (Industrial Area)';
+        let projectType = 'New Manufacturing Unit';
+        let investmentCr = 10;
+        let landAcres = 5;
+        let employees = 45;
+
+        try {
+          const quick = sessionStorage.getItem('nitipath_quick_assessment');
+          if (quick) {
+            const parsed = JSON.parse(quick);
+            if (parsed.industry) industry = parsed.industry;
+            if (parsed.location) location = parsed.location;
+            if (parsed.projectType) projectType = parsed.projectType;
+          }
+        } catch (e) {}
+
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('industry')) industry = urlParams.get('industry')!;
+        if (urlParams.get('location')) location = urlParams.get('location')!;
+        if (urlParams.get('projectType')) projectType = urlParams.get('projectType')!;
+
+        // Generate baseline statutory roadmap & checklist for this registered enterprise
+        const plan = generateRoadmapAndChecklist({
+          companyName: companyName.trim() || 'New Industrial Unit',
+          industry,
+          location,
+          investmentAmountCr: investmentCr,
+          landAcres,
+          employees,
+          projectType,
+        });
+
+        if (plan.success && plan.approvals.length > 0) {
+          applyGeneratedPlan({
+            approvals: plan.approvals,
+            documents: plan.documents,
+            risks: plan.risks,
+            readinessScore: plan.readinessScore,
           });
         }
 
-        showToast("Email verified successfully! Proceeding to business assessment onboarding.");
-        const search = window.location.search;
-        navigate(`/assessment${search}`);
+        updateBusinessProfile({
+          companyName: companyName.trim() || 'New Industrial Unit',
+          contactEmail: res.user.email,
+          contactMobile: mobile.trim(),
+          industry,
+          location,
+          investment: `₹${investmentCr} Cr`,
+          land: `${landAcres} Acres`,
+          employees,
+          projectType,
+          readinessScore: plan.readinessScore || 72,
+        });
+
+        try {
+          await syncLiveDatabase('business');
+        } catch (syncErr) {
+          console.log('Database sync note:', syncErr);
+        }
+
+        showToast("Registration and email verified! Welcome to your onboarding clearance roadmap.");
+
+        const redirectParam = urlParams.get('redirect');
+        if (redirectParam && redirectParam !== '/login' && !redirectParam.includes('/login') && redirectParam !== '/register') {
+          navigate(redirectParam);
+        } else {
+          navigate('/approvals');
+        }
       } else {
         throw new Error("Verification response did not contain an active verified user session.");
       }
@@ -125,14 +188,15 @@ export const RegisterPage: React.FC = () => {
     setErrorMessage(null);
     setIsExpired(false);
     try {
-      const res = await api.sendOtp(email, 'business');
+      const targetEmail = email.trim().toLowerCase();
+      const res = await api.sendOtp(targetEmail, 'business');
       if (res?.data?.devOtp) {
         setDevOtp(res.data.devOtp);
       }
       if (res?.data?.codeLength) {
         setCodeLength(res.data.codeLength);
       }
-      showToast(`Fresh verification code sent to ${email}`);
+      showToast(`Fresh verification code sent to ${targetEmail}`);
     } catch (err: any) {
       setErrorMessage(err.message || 'Failed to resend code. Please try again shortly.');
     }
